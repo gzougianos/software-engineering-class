@@ -24,7 +24,7 @@ import myy803.model.DocumentType;
 
 public class AddDocumentPanel extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 8694070220324964236L;
-	private DocumentLabel articleLabel, reportLabel, bookLabel, letterLabel;
+	private DocumentTypeLabel articleLabel, reportLabel, bookLabel, letterLabel;
 	private JTextArea previewTextArea;
 	private WebScrollPane previewScrollPane;
 	private DocumentType selectedDocumentType;
@@ -42,10 +42,10 @@ public class AddDocumentPanel extends JPanel implements ActionListener {
 		inheritedPanel.add(newDocumentLabel, BorderLayout.PAGE_START);
 
 		JPanel documentTypesPanel = new JPanel(new FlowLayout());
-		articleLabel = new DocumentLabel(this, DocumentType.ARTICLE, "Article", Icon.ARTICLE);
-		bookLabel = new DocumentLabel(this, DocumentType.BOOK, "Book", Icon.BOOK);
-		reportLabel = new DocumentLabel(this, DocumentType.REPORT, "Report", Icon.REPORT);
-		letterLabel = new DocumentLabel(this, DocumentType.LETTER, "Letter", Icon.LETTER);
+		articleLabel = new DocumentTypeLabel(this, DocumentType.ARTICLE, "Article", Icon.ARTICLE);
+		bookLabel = new DocumentTypeLabel(this, DocumentType.BOOK, "Book", Icon.BOOK);
+		reportLabel = new DocumentTypeLabel(this, DocumentType.REPORT, "Report", Icon.REPORT);
+		letterLabel = new DocumentTypeLabel(this, DocumentType.LETTER, "Letter", Icon.LETTER);
 		documentTypesPanel.add(articleLabel);
 		documentTypesPanel.add(bookLabel);
 		documentTypesPanel.add(reportLabel);

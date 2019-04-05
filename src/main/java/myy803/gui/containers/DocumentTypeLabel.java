@@ -13,13 +13,13 @@ import myy803.gui.Icon;
 import myy803.gui.MainFrame;
 import myy803.model.DocumentType;
 
-public class DocumentLabel extends JLabel {
+public class DocumentTypeLabel extends JLabel {
 	private static final long serialVersionUID = 1928502133191516275L;
 	private DocumentType documentType;
 	private boolean chosen;
 	private AddDocumentPanel addDocumentPanel;
 
-	public DocumentLabel(AddDocumentPanel adp, DocumentType docType, String text, Icon icon) {
+	public DocumentTypeLabel(AddDocumentPanel adp, DocumentType docType, String text, Icon icon) {
 		super(text);
 		setFont(MainFrame.MAIN_FONT);
 		setIcon(icon.toImageIcon(120));
@@ -42,8 +42,8 @@ public class DocumentLabel extends JLabel {
 		if (parent instanceof JPanel) {
 			JPanel parentPanel = (JPanel) parent;
 			for (Component c : parentPanel.getComponents()) {
-				if (c instanceof DocumentLabel) {
-					DocumentLabel dl = (DocumentLabel) c;
+				if (c instanceof DocumentTypeLabel) {
+					DocumentTypeLabel dl = (DocumentTypeLabel) c;
 					dl.setChosen(false);
 					dl.repaint();
 				}
