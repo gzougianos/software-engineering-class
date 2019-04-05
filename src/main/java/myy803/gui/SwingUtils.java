@@ -25,6 +25,26 @@ import javax.swing.Timer;
 import javax.swing.border.TitledBorder;
 
 public class SwingUtils {
+	/**
+	 * Converts the given s to HTML string, with fixed font (ACTIVE_FONT).<br>
+	 * Mostly used for tooltips in components.
+	 * @param s
+	 * @return the HTML string
+	 */
+	public static String toHTML(String s) {
+		if (s == null || s.length() == 0)
+			return "";
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("<html>");
+		int size = 4;
+		s = s.replaceAll("<hr>", "</font><hr><font size=\"" + size + "\">");
+		sb.append("<font size=\"" + size + "\">");
+		sb.append(s);
+		sb.append("</font>");
+		sb.append("</html>");
+		return sb.toString();
+	}
 
 	/**
 	 * Moves a window to the center of the screen
