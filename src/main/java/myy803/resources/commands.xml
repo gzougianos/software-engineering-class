@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<commands>
+	<command name="CHAPTER">
+		<description>Add chapter</description>
+		<allowed_documents>ALL</allowed_documents>
+		<disallowed_documents>LETTER,ARTICLE</disallowed_documents>
+		<content>\chapter{%cursor%}
+		</content>
+	</command>
+
+	<command name="SECTION">
+		<description>Add section</description>
+		<allowed_documents>ALL</allowed_documents>
+		<disallowed_documents>LETTER</disallowed_documents>
+		<content>\section{}</content>
+	</command>
+
+	<command name="SUBSECTION">
+		<description>Add subsection</description>
+		<allowed_documents>ALL</allowed_documents>
+		<disallowed_documents>LETTER</disallowed_documents>
+		<content>\section{}</content>
+	</command>
+
+	<command name="SUBSUBSECTION">
+		<description>Add subsubsection</description>
+		<allowed_documents>ALL</allowed_documents>
+		<disallowed_documents>LETTER</disallowed_documents>
+		<content>\section{}</content>
+	</command>
+
+	<command name="BEGIN_ITEMIZE">
+		<description>Add enumeration list</description>
+		<allowed_documents>ALL</allowed_documents>
+		<disallowed_documents>LETTER</disallowed_documents>
+		<content>\begin{itemize} \n\item %cursor% \n\item ... \n\end{itemize}
+		</content>
+	</command>
+
+	<command name="BEGIN_ENUMERATE">
+		<description>Add enumeration list</description>
+		<allowed_documents>ALL</allowed_documents>
+		<disallowed_documents>LETTER</disallowed_documents>
+		<content>
+			\begin{itemize}
+			\item %cursor%
+			\item ...
+			\end{itemize}
+		</content>
+	</command>
+
+	<command name="BEGIN_TABLE">
+		<description>Add a table</description>
+		<allowed_documents>ALL</allowed_documents>
+		<disallowed_documents>LETTER</disallowed_documents>
+		<content>
+			\begin{table}
+			\caption{%cursor%}\label{...}
+			\begin{tabular}{|c|c|c|}
+			\hline
+			...&amp;...&amp;...\\
+			...&amp;...&amp;...\\
+			...&amp;...&amp;...\\
+			\hline
+			\end{tabular}
+			\end{table}
+		</content>
+	</command>
+
+	<command name="BEGIN_FIGURE">
+		<description>Add a table</description>
+		<allowed_documents>ALL</allowed_documents>
+		<disallowed_documents>LETTER</disallowed_documents>
+		<content>
+			\begin{figure}
+			\includegraphics[width=...,height=...]{...}
+			\caption{%cursor%}\label{...}
+			\end{figure}
+		</content>
+	</command>
+
+</commands>
