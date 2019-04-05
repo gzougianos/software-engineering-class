@@ -12,10 +12,10 @@ import javax.swing.UIManager.LookAndFeelInfo;
 
 import com.alee.laf.WebLookAndFeel;
 
+import myy803.DocumentManager;
 import myy803.commons.Files;
 import myy803.commons.Setting;
 import myy803.gui.containers.DocumentTabbedPanel;
-import myy803.managers.DocumentManager;
 import myy803.model.Command;
 
 public class MainFrame extends JFrame {

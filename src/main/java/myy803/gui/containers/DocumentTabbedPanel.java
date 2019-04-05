@@ -12,9 +12,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import myy803.DocumentManager;
 import myy803.gui.Icon;
 import myy803.gui.MainFrame;
-import myy803.managers.DocumentManager;
 import myy803.model.Document;
 import myy803.model.DocumentType;
 

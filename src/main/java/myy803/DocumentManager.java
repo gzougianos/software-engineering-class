@@ -1,4 +1,4 @@
-package myy803.managers;
+package myy803;
 
 import java.io.File;
 import java.io.InputStream;

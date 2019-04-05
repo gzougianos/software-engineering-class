@@ -15,10 +15,10 @@ import javax.swing.border.EmptyBorder;
 
 import com.alee.laf.scroll.WebScrollPane;
 
+import myy803.DocumentManager;
 import myy803.gui.Icon;
 import myy803.gui.MainFrame;
 import myy803.gui.SwingUtils;
-import myy803.managers.DocumentManager;
 import myy803.model.Document;
 import myy803.model.DocumentType;
 
