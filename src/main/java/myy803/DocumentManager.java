@@ -60,6 +60,8 @@ public enum DocumentManager {
 	private String getNewName() {
 		if (documents.isEmpty())
 			return "unsaved.tex";
-		return String.format("unsaved%d.tex", documents.size());
+		Document lastDoc = documents.get(documents.size() - 1);
+		String lastId = lastDoc.getPath().getName().replaceAll("[a-zA-Z.]", "");
+		return lastId.isEmpty() ? "unsaved1.tex" : String.format("unsaved%d.tex", Integer.parseInt(lastId) + 1);
 	}
 }
