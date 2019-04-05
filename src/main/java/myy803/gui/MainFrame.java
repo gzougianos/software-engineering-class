@@ -8,7 +8,6 @@ import java.awt.Font;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
 
 import com.alee.laf.WebLookAndFeel;
 
@@ -85,14 +84,8 @@ public class MainFrame extends JFrame {
 	private void setUpLookAndFeel() {
 		try {
 			UIManager.setLookAndFeel(new WebLookAndFeel());
-			//			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-				if ("Nimbus".equals(info.getName())) {
-					//					UIManager.setLookAndFeel(info.getClassName());
-					break;
-				}
-			}
 		} catch (Exception e) {
+			System.err.println("Error setting up web look and feel.");
 			e.printStackTrace();
 		}
 	}
