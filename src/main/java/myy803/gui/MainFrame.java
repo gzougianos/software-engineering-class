@@ -22,7 +22,7 @@ public class MainFrame extends JFrame {
 	private static final String TITLE = "Latex Editor";
 	public static final Color BLUE_LIGHT = new Color(131, 171, 239);
 	public static final Color GRAY = new Color(140, 140, 140);
-	public static final Font MAIN_FONT = new Font("Verdana", 0, 14);
+	public static final Font MAIN_FONT = new Font("Cambria", 0, 14);
 	private SplashScreen splashScreen;
 	private DocumentTabbedPanel tabbedPanel;
 
