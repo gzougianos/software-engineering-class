@@ -25,7 +25,7 @@ import myy803.model.DocumentType;
 public class AddDocumentPanel extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 8694070220324964236L;
 	private DocumentTypeLabel articleLabel, reportLabel, bookLabel, letterLabel;
-	private DocumentTextPane previewTextArea;
+	private DocumentTextPane previewPane;
 	private WebScrollPane previewScrollPane;
 	private DocumentType selectedDocumentType;
 
@@ -58,15 +58,15 @@ public class AddDocumentPanel extends JPanel implements ActionListener {
 		createButton.addActionListener(this);
 		inheritedPanel.add(SwingUtils.createFlowPanel(FlowLayout.CENTER, createButton), BorderLayout.PAGE_END);
 
-		previewTextArea = new DocumentTextPane();
-		previewTextArea.setEditable(false);
-		previewTextArea.setFocusable(false);
-		previewTextArea.setOpaque(false);
-		previewTextArea.setBorder(null);
+		previewPane = new DocumentTextPane();
+		previewPane.setEditable(false);
+		previewPane.setFocusable(false);
+		previewPane.setOpaque(false);
+		previewPane.setBorder(null);
 
 		JPanel outerPanel = new JPanel(new BorderLayout());
 		outerPanel.setBorder(SwingUtils.createTitledBorder("Preview:"));
-		previewScrollPane = new WebScrollPane(previewTextArea);
+		previewScrollPane = new WebScrollPane(previewPane);
 		previewScrollPane.setDrawBorder(false);
 		previewScrollPane.setFocusable(false);
 		previewScrollPane.getViewport().setOpaque(false);
@@ -85,7 +85,7 @@ public class AddDocumentPanel extends JPanel implements ActionListener {
 		if (selectedDocumentType != null) {
 			this.selectedDocumentType = selectedDocumentType;
 			String preview = DocumentManager.INSTANCE.createDocument(selectedDocumentType).getContent();
-			previewTextArea.setText(preview);
+			previewPane.setText(preview);
 			SwingUtilities.invokeLater(() -> previewScrollPane.getVerticalScrollBar().setValue(0));
 		}
 	}
