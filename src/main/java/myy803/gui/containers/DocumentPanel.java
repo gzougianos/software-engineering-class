@@ -18,6 +18,7 @@ import javax.swing.event.DocumentListener;
 import com.alee.laf.scroll.WebScrollPane;
 import com.alee.laf.toolbar.WebToolBar;
 
+import myy803.commons.Setting;
 import myy803.gui.DocumentFileChooser;
 import myy803.gui.DocumentTextPane;
 import myy803.gui.Icon;
@@ -136,6 +137,7 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 			if (chooser.showSaveDialog(DocumentPanel.this) == JFileChooser.APPROVE_OPTION) {
 				File oldPath = document.getPath();
 				File selectedFile = chooser.getSelectedFile();
+				Setting.LAST_DIRECTORY_SAVED.update(selectedFile.getParentFile().getAbsolutePath());
 				document.setPath(selectedFile);
 				try {
 					document.save();
