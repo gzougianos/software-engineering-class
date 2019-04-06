@@ -1,16 +1,20 @@
 package myy803.gui.containers;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -58,6 +62,15 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 		add(scrollPane, BorderLayout.CENTER);
 
 		add(createBottomBar(), BorderLayout.PAGE_END);
+		getActionMap().put("save", new AbstractAction() {
+			private static final long serialVersionUID = -7334567622977748920L;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				saveButton.doClick();
+			}
+		});
+		getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("control S"), "save");
 	}
 
 	private JPanel createBottomBar() {
