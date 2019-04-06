@@ -8,7 +8,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
@@ -16,6 +15,7 @@ import javax.swing.border.EmptyBorder;
 import com.alee.laf.scroll.WebScrollPane;
 
 import myy803.DocumentManager;
+import myy803.gui.DocumentTextPane;
 import myy803.gui.Icon;
 import myy803.gui.MainFrame;
 import myy803.gui.SwingUtils;
@@ -25,7 +25,7 @@ import myy803.model.DocumentType;
 public class AddDocumentPanel extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 8694070220324964236L;
 	private DocumentTypeLabel articleLabel, reportLabel, bookLabel, letterLabel;
-	private JTextArea previewTextArea;
+	private DocumentTextPane previewTextArea;
 	private WebScrollPane previewScrollPane;
 	private DocumentType selectedDocumentType;
 
@@ -38,7 +38,7 @@ public class AddDocumentPanel extends JPanel implements ActionListener {
 		JLabel newDocumentLabel = new JLabel("New Document");
 		newDocumentLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		newDocumentLabel.setFont(MainFrame.MAIN_FONT.deriveFont(18f));
-		newDocumentLabel.setForeground(MainFrame.BLUE_LIGHT);
+		newDocumentLabel.setForeground(MainFrame.LIGHT_BLUE);
 		inheritedPanel.add(newDocumentLabel, BorderLayout.PAGE_START);
 
 		JPanel documentTypesPanel = new JPanel(new FlowLayout());
@@ -58,8 +58,7 @@ public class AddDocumentPanel extends JPanel implements ActionListener {
 		createButton.addActionListener(this);
 		inheritedPanel.add(SwingUtils.createFlowPanel(FlowLayout.CENTER, createButton), BorderLayout.PAGE_END);
 
-		previewTextArea = new JTextArea();
-		previewTextArea.setFont(MainFrame.MAIN_FONT);
+		previewTextArea = new DocumentTextPane();
 		previewTextArea.setEditable(false);
 		previewTextArea.setFocusable(false);
 		previewTextArea.setOpaque(false);

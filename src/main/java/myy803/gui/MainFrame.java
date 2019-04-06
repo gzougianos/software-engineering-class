@@ -20,7 +20,7 @@ import myy803.model.Command;
 public class MainFrame extends JFrame {
 	private static final long serialVersionUID = 895370362316846430L;
 	private static final String TITLE = "Latex Editor";
-	public static final Color BLUE_LIGHT = new Color(131, 171, 239);
+	public static final Color LIGHT_BLUE = new Color(111, 141, 255);
 	public static final Color GRAY = new Color(140, 140, 140);
 	public static final Font MAIN_FONT = new Font("Cambria", 0, 14);
 	private SplashScreen splashScreen;

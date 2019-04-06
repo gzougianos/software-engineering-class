@@ -57,7 +57,7 @@ public class DocumentTextPane extends JTextPane implements DocumentListener {
 	public void changedUpdate(DocumentEvent e) {	refixFont();	}
 	//@formatter:on
 	private void refixFont() {
-		StyleConstants.setForeground(keywordStyle, MainFrame.BLUE_LIGHT);
+		StyleConstants.setForeground(keywordStyle, MainFrame.LIGHT_BLUE);
 		StyleConstants.setBold(keywordStyle, true);
 		StyleConstants.setFontFamily(keywordStyle, MainFrame.MAIN_FONT.getFontName());
 		StyleConstants.setFontSize(keywordStyle, fontSize);
