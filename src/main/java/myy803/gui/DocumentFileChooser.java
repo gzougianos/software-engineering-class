@@ -8,14 +8,20 @@ import javax.swing.filechooser.FileFilter;
 
 import com.alee.laf.filechooser.WebFileChooser;
 
+import myy803.commons.Setting;
 import myy803.model.Document;
 
 public class DocumentFileChooser extends WebFileChooser {
 	private static final long serialVersionUID = 6055276476857528752L;
 
 	public DocumentFileChooser(Document document) {
-		super(document.getPath());
-		setSelectedFile(document.getPath().getAbsolutePath());
+		super();
+		String currentDir = Setting.LAST_DIRECTORY_SAVED.toStr();
+		if (document.getPath().exists())
+			currentDir = document.getPath().getAbsolutePath();
+		setCurrentDirectory(currentDir);
+		if (document.getPath().exists())
+			setSelectedFile(document.getPath().getAbsolutePath());
 		setFileHidingEnabled(false);
 		setAcceptAllFileFilterUsed(false);
 		setFileFilter(new FileFilter() {
