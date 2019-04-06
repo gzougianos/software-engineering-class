@@ -9,6 +9,7 @@ import java.util.Properties;
 public enum Setting {
 	// @formatter:off
 	FRAME_FULLSCREEN(false),
+	LAST_DIRECTORY_SAVED(System.getProperty("user.home")),
 	FRAME_X(0),
 	FRAME_Y(0),
 	FRAME_WIDTH(600),

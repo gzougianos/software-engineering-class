@@ -19,6 +19,8 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 import javax.swing.Timer;
@@ -44,6 +46,18 @@ public class SwingUtils {
 		sb.append("</font>");
 		sb.append("</html>");
 		return sb.toString();
+	}
+
+	/**
+	 * Increases the speed of the vertical scroll bar of the given scroll pane.
+	 * @param scrollPane The scroll Pane.
+	 * @param amount the extra speed.
+	 */
+	public static void increaseScrollBarSpeed(JScrollPane scrollPane, int amount) {
+		JScrollBar sb = scrollPane.getVerticalScrollBar();
+		if (sb != null) {
+			sb.setUnitIncrement(sb.getUnitIncrement() + amount);
+		}
 	}
 
 	/**

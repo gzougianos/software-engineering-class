@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import myy803.DocumentManager;
+import myy803.gui.ExternalSwingUtils;
 import myy803.gui.Icon;
 import myy803.gui.MainFrame;
 import myy803.model.Document;
@@ -35,13 +36,12 @@ public class DocumentTabbedPanel extends JTabbedPane {
 		DocumentPanel dp = new DocumentPanel(doc);
 		addTab(doc.getName(), dp);
 		int index = indexOfTab(doc.getName());
-		Icon icon = getIconBasedOnDocType(doc.getDocumentType());
-		setTabComponentAt(index, new CloseTabComponent(doc.getName(), icon));
+		setTabComponentAt(index, new CloseTabComponent(doc));
 		addTab("+", addDocPanel);
 		setSelectedIndex(getTabCount() - 2);
 	}
 
-	private Icon getIconBasedOnDocType(DocumentType docType) {
+	private static Icon getIconBasedOnDocType(DocumentType docType) {
 		switch (docType) {
 			case ARTICLE:
 				return Icon.ARTICLE_SMALL;
@@ -54,18 +54,38 @@ public class DocumentTabbedPanel extends JTabbedPane {
 		}
 	}
 
+	public void repaintLabels() {
+		for (CloseTabComponent c : ExternalSwingUtils.getDescendantsOfType(CloseTabComponent.class, this)) {
+			c.titleLabel.repaint();
+			c.revalidate();
+		}
+	}
+
 	private static class CloseTabComponent extends JPanel implements ActionListener {
 		private static final long serialVersionUID = 4148815077976600552L;
 		private String name;
+		private JLabel titleLabel;
+		private Document document;
 
-		private CloseTabComponent(String name, Icon icon) {
+		private CloseTabComponent(Document doc) {
 			super(new GridBagLayout());
-			this.name = name;
+			this.name = doc.getName();
+			this.document = doc;
 			setOpaque(false);
-			JLabel lblTitle = new JLabel(name);
-			lblTitle.setIcon(icon.toImageIcon());
-			lblTitle.setFont(MainFrame.MAIN_FONT);
-			lblTitle.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+			Icon icon = getIconBasedOnDocType(doc.getDocumentType());
+			titleLabel = new JLabel(name) {
+				private static final long serialVersionUID = 1826571417697457181L;
+
+				@Override
+				public String getText() {
+					if (!document.isSaved())
+						return doc.getName() + " *";
+					return doc.getName();
+				}
+			};
+			titleLabel.setIcon(icon.toImageIcon());
+			titleLabel.setFont(MainFrame.MAIN_FONT);
+			titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 			JButton btnClose = new JButton("X");
 			btnClose.setFont(MainFrame.MAIN_FONT.deriveFont(10f));
 
@@ -74,7 +94,7 @@ public class DocumentTabbedPanel extends JTabbedPane {
 			gbc.gridy = 0;
 			gbc.weightx = 1;
 
-			add(lblTitle, gbc);
+			add(titleLabel, gbc);
 
 			gbc.gridx++;
 			gbc.weightx = 0;

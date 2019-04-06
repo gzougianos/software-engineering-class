@@ -1,24 +1,31 @@
 package myy803.gui.containers;
 
 import java.awt.BorderLayout;
+import java.io.File;
+import java.io.FileNotFoundException;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import com.alee.laf.scroll.WebScrollPane;
 import com.alee.laf.toolbar.WebToolBar;
 
+import myy803.gui.DocumentFileChooser;
 import myy803.gui.DocumentTextPane;
+import myy803.gui.Icon;
 import myy803.gui.MainFrame;
 import myy803.gui.SwingUtils;
 import myy803.model.Document;
 
-public class DocumentPanel extends JPanel {
+public class DocumentPanel extends JPanel implements DocumentListener {
 	private static final long serialVersionUID = -1467388562407975227L;
 	private static final String LEFT_ARROW = "\u2190";
 	private static final String UP_ARROW = "\u2191";
@@ -31,7 +38,7 @@ public class DocumentPanel extends JPanel {
 	private DocumentTextPane textPane;
 	private WebScrollPane scrollPane;
 	private JSlider fontSlider;
-	private JButton changeToolbarLocationButton;
+	private JButton changeToolbarLocationButton, saveButton, saveAsButton;
 
 	public DocumentPanel(Document document) {
 		super(new BorderLayout());
@@ -40,7 +47,10 @@ public class DocumentPanel extends JPanel {
 		initFontSlider();
 		initTextPane();
 
+		toolbar.add(saveButton);
+		toolbar.add(saveAsButton);
 		toolbar.addToEnd(fontSlider);
+		toolbar.addSeparatorToEnd();
 		toolbar.addToEnd(changeToolbarLocationButton);
 		add(toolbar, POSITIONS[position]);
 
@@ -68,12 +78,13 @@ public class DocumentPanel extends JPanel {
 		textPane.setText(document.getContent());
 		textPane.setCaretPosition(0);
 		textPane.setFontSize(fontSlider.getValue());
+		textPane.getDocument().addDocumentListener(this);
 		scrollPane = new WebScrollPane(textPane);
 		scrollPane.setDrawBorder(false);
 		scrollPane.setFocusable(false);
 		scrollPane.getViewport().setOpaque(false);
 		scrollPane.setOpaque(false);
-		scrollPane.getVerticalScrollBar().setUnitIncrement(scrollPane.getVerticalScrollBar().getUnitIncrement() * 10);
+		SwingUtils.increaseScrollBarSpeed(scrollPane, 40);
 	}
 
 	private void initToolbar() {
@@ -94,6 +105,50 @@ public class DocumentPanel extends JPanel {
 			repaint();
 			revalidate();
 		});
+
+		saveButton = new JButton(Icon.SAVE.toImageIcon(20));
+		saveButton.setFont(MainFrame.MAIN_FONT);
+		saveButton.setToolTipText(SwingUtils.toHTML("Save"));
+		saveButton.addActionListener(e -> {
+			if (!document.getPath().exists()) {
+				saveAsButton.doClick();
+				return;
+			}
+			document.setContent(textPane.getText());
+			try {
+				document.save();
+				document.setSaved(true);
+				saveButton.setEnabled(false);
+				MainFrame.getInstance().getTabbedPanel().repaintLabels();
+			} catch (FileNotFoundException e1) {
+				System.err.println("Error saving document in " + document.getPath().getAbsolutePath());
+				e1.printStackTrace();
+			}
+		});
+		saveButton.setEnabled(!getDocument().isSaved());
+
+		saveAsButton = new JButton(Icon.SAVE_AS.toImageIcon(20));
+		saveAsButton.setFont(MainFrame.MAIN_FONT);
+		saveAsButton.setToolTipText(SwingUtils.toHTML("Save As"));
+		saveAsButton.addActionListener(e -> {
+			DocumentFileChooser chooser = new DocumentFileChooser(getDocument());
+			chooser.setDialogTitle("Save document");
+			if (chooser.showSaveDialog(DocumentPanel.this) == JFileChooser.APPROVE_OPTION) {
+				File oldPath = document.getPath();
+				File selectedFile = chooser.getSelectedFile();
+				document.setPath(selectedFile);
+				try {
+					document.save();
+					document.setSaved(true);
+					saveButton.setEnabled(false);
+					MainFrame.getInstance().getTabbedPanel().repaintLabels();
+				} catch (FileNotFoundException e1) {
+					System.err.println("Error saving as document in " + document.getPath().getAbsolutePath());
+					e1.printStackTrace();
+					document.setPath(oldPath);
+				}
+			}
+		});
 	}
 
 	private void initFontSlider() {
@@ -111,6 +166,27 @@ public class DocumentPanel extends JPanel {
 
 	public Document getDocument() {
 		return document;
+	}
+
+	@Override
+	public void insertUpdate(DocumentEvent e) {
+		getDocument().setSaved(false);
+		saveButton.setEnabled(!getDocument().isSaved());
+		MainFrame.getInstance().getTabbedPanel().repaintLabels();
+	}
+
+	@Override
+	public void removeUpdate(DocumentEvent e) {
+		getDocument().setSaved(false);
+		saveButton.setEnabled(!getDocument().isSaved());
+		MainFrame.getInstance().getTabbedPanel().repaintLabels();
+	}
+
+	@Override
+	public void changedUpdate(DocumentEvent e) {
+		getDocument().setSaved(false);
+		saveButton.setEnabled(!getDocument().isSaved());
+		MainFrame.getInstance().getTabbedPanel().repaintLabels();
 	}
 
 }

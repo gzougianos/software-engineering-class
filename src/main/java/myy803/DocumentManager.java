@@ -50,7 +50,7 @@ public enum DocumentManager {
 
 	public Document createDocument(DocumentType documentType) {
 		String name = getNewName();
-		File path = new File(Files.TEMP, name);
+		File path = new File(Files.USER_HOME, name);
 		Document protype = prototypes.get(documentType);
 		Document clone = protype.clone();
 		clone.setPath(path);

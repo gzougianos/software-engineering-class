@@ -8,6 +8,8 @@ import javax.swing.ImageIcon;
 
 public enum Icon {
 	//@formatter:off
+	SAVE("save.png"),
+	SAVE_AS("save_as.png"),
 	BOOK("book.png"),
 	ARTICLE("article.png"),
 	LETTER("letter.png"),

@@ -1,6 +1,8 @@
 package myy803.model;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 
 public class Document {
 	private String author;
@@ -10,6 +12,7 @@ public class Document {
 	private String content;
 	private DocumentType documentType;
 	private File path;
+	private boolean saved;
 
 	public Document(String author, long lastModifiedDate, String copyright, int versionId, String content,
 			DocumentType documentType, File path) {
@@ -20,6 +23,7 @@ public class Document {
 		this.content = content;
 		this.documentType = documentType;
 		this.path = path;
+		this.saved = path.exists();
 	}
 
 	public Document(String author, long lastModifiedDate, String copyright, int versionId, String content,
@@ -87,10 +91,24 @@ public class Document {
 		this.path = path;
 	}
 
+	public boolean isSaved() {
+		return saved;
+	}
+
+	public void setSaved(boolean saved) {
+		this.saved = saved;
+	}
+
 	@Override
 	public Document clone() {
 		Document doc = new Document(this.getAuthor(), this.getLastModifiedDate(), this.getCopyright(), this.getVersionId(),
 				this.getContent(), this.getDocumentType(), this.getPath());
 		return doc;
+	}
+
+	public void save() throws FileNotFoundException {
+		try (PrintWriter out = new PrintWriter(getPath())) {
+			out.write(getContent());
+		}
 	}
 }
