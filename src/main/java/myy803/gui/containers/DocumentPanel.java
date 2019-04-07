@@ -171,6 +171,7 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 				selectedFile = new File(selectedFile.getAbsolutePath() + Document.FILE_EXTENSION);
 			Setting.LAST_DIRECTORY_SAVED.update(selectedFile.getParentFile().getAbsolutePath());
 			document.setPath(selectedFile);
+			document.setLastModifiedDate(System.currentTimeMillis());
 			try {
 				changeDocumentSavedStateAndUpdateGui(true);
 				DocumentManager.INSTANCE.saveDocument(document);
@@ -187,6 +188,7 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 			doSaveAs();
 			return;
 		}
+		document.setLastModifiedDate(System.currentTimeMillis());
 		document.setContent(textPane.getText());
 		try {
 			changeDocumentSavedStateAndUpdateGui(true);
