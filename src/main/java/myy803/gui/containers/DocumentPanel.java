@@ -123,47 +123,53 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 		saveButton = new JButton(Icon.SAVE.toImageIcon(20));
 		saveButton.setFont(MainFrame.MAIN_FONT);
 		saveButton.setToolTipText(SwingUtils.toHTML("Save"));
-		saveButton.addActionListener(e -> {
-			if (!document.getPath().exists()) {
-				saveAsButton.doClick();
-				return;
-			}
-			document.setContent(textPane.getText());
+		saveButton.addActionListener(e -> doSave());
+		saveButton.setEnabled(!getDocument().isSaved());
+
+		saveAsButton = new JButton(Icon.SAVE_AS.toImageIcon(20));
+		saveAsButton.setFont(MainFrame.MAIN_FONT);
+		saveAsButton.setToolTipText(SwingUtils.toHTML("Save As"));
+		saveAsButton.addActionListener(e -> doSaveAs());
+	}
+
+	private void doSaveAs() {
+		DocumentFileChooser chooser = new DocumentFileChooser(getDocument());
+		chooser.setDialogTitle("Save document");
+		if (chooser.showSaveDialog(DocumentPanel.this) == JFileChooser.APPROVE_OPTION) {
+			File oldPath = document.getPath();
+			File selectedFile = chooser.getSelectedFile();
+			if (!selectedFile.getName().endsWith(".tex"))
+				selectedFile = new File(selectedFile.getAbsolutePath() + ".tex");
+			Setting.LAST_DIRECTORY_SAVED.update(selectedFile.getParentFile().getAbsolutePath());
+			document.setPath(selectedFile);
 			try {
 				document.save();
 				document.setSaved(true);
 				saveButton.setEnabled(false);
 				MainFrame.getInstance().getTabbedPanel().repaintLabels();
 			} catch (FileNotFoundException e1) {
-				System.err.println("Error saving document in " + document.getPath().getAbsolutePath());
+				System.err.println("Error saving as document in " + document.getPath().getAbsolutePath());
 				e1.printStackTrace();
+				document.setPath(oldPath);
 			}
-		});
-		saveButton.setEnabled(!getDocument().isSaved());
+		}
+	}
 
-		saveAsButton = new JButton(Icon.SAVE_AS.toImageIcon(20));
-		saveAsButton.setFont(MainFrame.MAIN_FONT);
-		saveAsButton.setToolTipText(SwingUtils.toHTML("Save As"));
-		saveAsButton.addActionListener(e -> {
-			DocumentFileChooser chooser = new DocumentFileChooser(getDocument());
-			chooser.setDialogTitle("Save document");
-			if (chooser.showSaveDialog(DocumentPanel.this) == JFileChooser.APPROVE_OPTION) {
-				File oldPath = document.getPath();
-				File selectedFile = chooser.getSelectedFile();
-				Setting.LAST_DIRECTORY_SAVED.update(selectedFile.getParentFile().getAbsolutePath());
-				document.setPath(selectedFile);
-				try {
-					document.save();
-					document.setSaved(true);
-					saveButton.setEnabled(false);
-					MainFrame.getInstance().getTabbedPanel().repaintLabels();
-				} catch (FileNotFoundException e1) {
-					System.err.println("Error saving as document in " + document.getPath().getAbsolutePath());
-					e1.printStackTrace();
-					document.setPath(oldPath);
-				}
-			}
-		});
+	private void doSave() {
+		if (!document.getPath().exists()) {
+			doSaveAs();
+			return;
+		}
+		document.setContent(textPane.getText());
+		try {
+			document.save();
+			document.setSaved(true);
+			saveButton.setEnabled(false);
+			MainFrame.getInstance().getTabbedPanel().repaintLabels();
+		} catch (FileNotFoundException e1) {
+			System.err.println("Error saving document in " + document.getPath().getAbsolutePath());
+			e1.printStackTrace();
+		}
 	}
 
 	private void initFontSlider() {
