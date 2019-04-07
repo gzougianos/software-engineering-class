@@ -42,7 +42,17 @@ public class DocumentTabbedPanel extends JTabbedPane {
 	}
 
 	public void openDocumentTab(Document doc) {
-		int index = indexOfTab(doc.getName());
+		int index = -1;
+		for (int i = 0; i < getTabCount(); i++) {
+			Component c = getTabComponentAt(i);
+			if (c instanceof CloseTabComponent) {
+				CloseTabComponent tabC = (CloseTabComponent) c;
+				if (tabC.titleLabel.getText().replaceAll(" *", "").contains(doc.getName())) {
+					index = i;
+					break;
+				}
+			}
+		}
 		if (index >= 0)
 			setSelectedIndex(index);
 	}
