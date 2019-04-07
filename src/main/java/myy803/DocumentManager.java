@@ -1,7 +1,12 @@
 package myy803;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,11 +62,24 @@ public enum DocumentManager {
 		return clone;
 	}
 
+	public void saveDocument(Document doc) throws IOException {
+		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(doc.getPath()))) {
+			oos.writeObject(doc);
+		}
+	}
+
+	public Document loadDocument(File path) throws ClassNotFoundException, IOException {
+		try (ObjectInputStream oos = new ObjectInputStream(new FileInputStream(path))) {
+			return (Document) oos.readObject();
+		}
+	}
+
 	private String getNewName() {
 		if (documents.isEmpty())
-			return "unsaved.tex";
+			return "unsaved" + Document.FILE_EXTENSION;
 		Document lastDoc = documents.get(documents.size() - 1);
 		String lastId = lastDoc.getPath().getName().replaceAll("[a-zA-Z.]", "");
-		return lastId.isEmpty() ? "unsaved1.tex" : String.format("unsaved%d.tex", Integer.parseInt(lastId) + 1);
+		return lastId.isEmpty() ? "unsaved1" + Document.FILE_EXTENSION
+				: String.format("unsaved%d" + Document.FILE_EXTENSION, Integer.parseInt(lastId) + 1);
 	}
 }

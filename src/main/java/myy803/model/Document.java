@@ -1,10 +1,11 @@
 package myy803.model;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
+import java.io.Serializable;
 
-public class Document {
+public class Document implements Serializable {
+	private static final long serialVersionUID = 5357144600210787382L;
+	public static final String FILE_EXTENSION = ".lat";
 	private String author;
 	private long lastModifiedDate;
 	private String copyright;
@@ -80,7 +81,7 @@ public class Document {
 	}
 
 	public String getName() {
-		return getPath().getName().replaceAll(".tex", "");
+		return getPath().getName().replaceAll(FILE_EXTENSION, "");
 	}
 
 	public File getPath() {
@@ -106,9 +107,20 @@ public class Document {
 		return doc;
 	}
 
-	public void save() throws FileNotFoundException {
-		try (PrintWriter out = new PrintWriter(getPath())) {
-			out.write(getContent());
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Document) {
+			Document doc = (Document) obj;
+			boolean equals = true;
+			equals &= doc.getContent().equals(this.getContent());
+			equals &= doc.getDocumentType() == this.getDocumentType();
+			equals &= doc.getVersionId() == this.getVersionId();
+			equals &= doc.getLastModifiedDate() == this.getLastModifiedDate();
+			equals &= doc.getAuthor().equals(this.getAuthor());
+			equals &= doc.getCopyright().equals(this.getCopyright());
+			equals &= doc.getPath().equals(this.getPath());
+			return equals;
 		}
+		return super.equals(obj);
 	}
 }

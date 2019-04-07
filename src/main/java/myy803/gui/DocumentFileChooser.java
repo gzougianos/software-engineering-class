@@ -14,6 +14,11 @@ import myy803.model.Document;
 public class DocumentFileChooser extends WebFileChooser {
 	private static final long serialVersionUID = 6055276476857528752L;
 
+	public DocumentFileChooser() {
+		super(Setting.LAST_DIRECTORY_SAVED.toStr());
+		applyOptions();
+	}
+
 	public DocumentFileChooser(Document document) {
 		super();
 		String currentDir = Setting.LAST_DIRECTORY_SAVED.toStr();
@@ -22,18 +27,22 @@ public class DocumentFileChooser extends WebFileChooser {
 		setCurrentDirectory(currentDir);
 		if (document.getPath().exists())
 			setSelectedFile(document.getPath().getAbsolutePath());
+		applyOptions();
+	}
+
+	private void applyOptions() {
 		setFileHidingEnabled(false);
 		setAcceptAllFileFilterUsed(false);
 		setFileFilter(new FileFilter() {
 
 			@Override
 			public String getDescription() {
-				return "Latex files";
+				return "LAT files";
 			}
 
 			@Override
 			public boolean accept(File f) {
-				return f.getName().toLowerCase().endsWith(".tex");
+				return f.getName().toLowerCase().endsWith(Document.FILE_EXTENSION);
 			}
 		});
 		boostScrollBar();

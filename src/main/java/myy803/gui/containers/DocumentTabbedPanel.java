@@ -41,6 +41,12 @@ public class DocumentTabbedPanel extends JTabbedPane {
 		setSelectedIndex(getTabCount() - 2);
 	}
 
+	public void openDocumentTab(Document doc) {
+		int index = indexOfTab(doc.getName());
+		if (index >= 0)
+			setSelectedIndex(index);
+	}
+
 	private static Icon getIconBasedOnDocType(DocumentType docType) {
 		switch (docType) {
 			case ARTICLE:

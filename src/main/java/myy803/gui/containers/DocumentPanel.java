@@ -3,7 +3,7 @@ package myy803.gui.containers;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
@@ -22,6 +22,7 @@ import javax.swing.event.DocumentListener;
 import com.alee.laf.scroll.WebScrollPane;
 import com.alee.laf.toolbar.WebToolBar;
 
+import myy803.DocumentManager;
 import myy803.commons.Setting;
 import myy803.gui.DocumentFileChooser;
 import myy803.gui.DocumentTextPane;
@@ -32,6 +33,7 @@ import myy803.model.Document;
 
 public class DocumentPanel extends JPanel implements DocumentListener {
 	private static final long serialVersionUID = -1467388562407975227L;
+	private static final int ICON_DIMENSION = 20;
 	private static final String LEFT_ARROW = "\u2190";
 	private static final String UP_ARROW = "\u2191";
 	private static final String RIGHT_ARROW = "\u2192";
@@ -44,6 +46,7 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 	private WebScrollPane scrollPane;
 	private JSlider fontSlider;
 	private JButton changeToolbarLocationButton, saveButton, saveAsButton;
+	private JButton loadButton;
 
 	public DocumentPanel(Document document) {
 		super(new BorderLayout());
@@ -52,6 +55,7 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 		initFontSlider();
 		initTextPane();
 
+		toolbar.add(loadButton);
 		toolbar.add(saveButton);
 		toolbar.add(saveAsButton);
 		toolbar.addToEnd(fontSlider);
@@ -119,17 +123,42 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 			repaint();
 			revalidate();
 		});
+		loadButton = new JButton(Icon.LOAD.toImageIcon(ICON_DIMENSION));
+		loadButton.setFont(MainFrame.MAIN_FONT);
+		loadButton.setToolTipText(SwingUtils.toHTML("Load file"));
+		loadButton.addActionListener(e -> doLoad());
 
-		saveButton = new JButton(Icon.SAVE.toImageIcon(20));
+		saveButton = new JButton(Icon.SAVE.toImageIcon(ICON_DIMENSION));
 		saveButton.setFont(MainFrame.MAIN_FONT);
-		saveButton.setToolTipText(SwingUtils.toHTML("Save"));
+		saveButton.setToolTipText(SwingUtils.toHTML("Save file"));
 		saveButton.addActionListener(e -> doSave());
 		saveButton.setEnabled(!getDocument().isSaved());
 
 		saveAsButton = new JButton(Icon.SAVE_AS.toImageIcon(20));
 		saveAsButton.setFont(MainFrame.MAIN_FONT);
-		saveAsButton.setToolTipText(SwingUtils.toHTML("Save As"));
+		saveAsButton.setToolTipText(SwingUtils.toHTML("Save file as..."));
 		saveAsButton.addActionListener(e -> doSaveAs());
+	}
+
+	private void doLoad() {
+		DocumentFileChooser chooser = new DocumentFileChooser();
+		chooser.setDialogTitle("Load document");
+		if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+			File selectedFile = chooser.getSelectedFile();
+			try {
+				Document doc = DocumentManager.INSTANCE.loadDocument(selectedFile);
+				// Check if this file is already opened
+				if (DocumentManager.INSTANCE.getDocuments().contains(doc)) {
+					MainFrame.getInstance().getTabbedPanel().openDocumentTab(doc);
+				} else {
+					DocumentManager.INSTANCE.getDocuments().add(doc);
+					MainFrame.getInstance().getTabbedPanel().createTabAndShowDocument(doc);
+				}
+			} catch (ClassNotFoundException | IOException e) {
+				System.err.println("Error reading file " + selectedFile.getAbsolutePath());
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private void doSaveAs() {
@@ -138,16 +167,14 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 		if (chooser.showSaveDialog(DocumentPanel.this) == JFileChooser.APPROVE_OPTION) {
 			File oldPath = document.getPath();
 			File selectedFile = chooser.getSelectedFile();
-			if (!selectedFile.getName().endsWith(".tex"))
-				selectedFile = new File(selectedFile.getAbsolutePath() + ".tex");
+			if (!selectedFile.getName().endsWith(Document.FILE_EXTENSION))
+				selectedFile = new File(selectedFile.getAbsolutePath() + Document.FILE_EXTENSION);
 			Setting.LAST_DIRECTORY_SAVED.update(selectedFile.getParentFile().getAbsolutePath());
 			document.setPath(selectedFile);
 			try {
-				document.save();
-				document.setSaved(true);
-				saveButton.setEnabled(false);
-				MainFrame.getInstance().getTabbedPanel().repaintLabels();
-			} catch (FileNotFoundException e1) {
+				changeDocumentSavedStateAndUpdateGui(true);
+				DocumentManager.INSTANCE.saveDocument(document);
+			} catch (IOException e1) {
 				System.err.println("Error saving as document in " + document.getPath().getAbsolutePath());
 				e1.printStackTrace();
 				document.setPath(oldPath);
@@ -162,11 +189,9 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 		}
 		document.setContent(textPane.getText());
 		try {
-			document.save();
-			document.setSaved(true);
-			saveButton.setEnabled(false);
-			MainFrame.getInstance().getTabbedPanel().repaintLabels();
-		} catch (FileNotFoundException e1) {
+			changeDocumentSavedStateAndUpdateGui(true);
+			DocumentManager.INSTANCE.saveDocument(document);
+		} catch (IOException e1) {
 			System.err.println("Error saving document in " + document.getPath().getAbsolutePath());
 			e1.printStackTrace();
 		}
@@ -191,23 +216,22 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 
 	@Override
 	public void insertUpdate(DocumentEvent e) {
-		getDocument().setSaved(false);
-		saveButton.setEnabled(!getDocument().isSaved());
-		MainFrame.getInstance().getTabbedPanel().repaintLabels();
+		changeDocumentSavedStateAndUpdateGui(false);
 	}
 
 	@Override
 	public void removeUpdate(DocumentEvent e) {
-		getDocument().setSaved(false);
-		saveButton.setEnabled(!getDocument().isSaved());
-		MainFrame.getInstance().getTabbedPanel().repaintLabels();
+		changeDocumentSavedStateAndUpdateGui(false);
 	}
 
 	@Override
 	public void changedUpdate(DocumentEvent e) {
-		getDocument().setSaved(false);
+		changeDocumentSavedStateAndUpdateGui(false);
+	}
+
+	private void changeDocumentSavedStateAndUpdateGui(boolean saved) {
+		getDocument().setSaved(saved);
 		saveButton.setEnabled(!getDocument().isSaved());
 		MainFrame.getInstance().getTabbedPanel().repaintLabels();
 	}
-
 }
