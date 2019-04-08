@@ -18,7 +18,7 @@ import myy803.model.DocumentType;
 
 public enum DocumentManager {
 	INSTANCE;
-	private static final String TEMPLATES_PACKAGE = "/myy803/resources";
+	private static final String TEMPLATES_PACKAGE = "/myy803/resources/templates";
 	private final List<Document> documents = new ArrayList<>();
 	private final HashMap<DocumentType, Document> prototypes = new HashMap<>();
 
@@ -36,7 +36,7 @@ public enum DocumentManager {
 
 	private String loadTemplate(DocumentType docType) {
 		String name = docType.toString().toLowerCase();
-		String fileName = TEMPLATES_PACKAGE + File.separator + name + "_template.txt";
+		String fileName = TEMPLATES_PACKAGE + File.separator + name + ".txt";
 		InputStream is = DocumentManager.class.getResourceAsStream(fileName);
 		if (is == null) {
 			System.err.println("No template found for document type: " + name);
