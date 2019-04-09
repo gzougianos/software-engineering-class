@@ -25,7 +25,7 @@ import com.alee.laf.toolbar.WebToolBar;
 import myy803.DocumentManager;
 import myy803.commons.Setting;
 import myy803.gui.DocumentFileChooser;
-import myy803.gui.DocumentTextPane;
+import myy803.gui.DocumentTextPanePanel;
 import myy803.gui.Icon;
 import myy803.gui.MainFrame;
 import myy803.gui.SwingUtils;
@@ -42,7 +42,7 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 	private int position = 0;
 	private WebToolBar toolbar;
 	private Document document;
-	private DocumentTextPane textPane;
+	private DocumentTextPanePanel documentTextPanePanel;
 	private WebScrollPane scrollPane;
 	private JSlider fontSlider;
 	private JButton changeToolbarLocationButton, saveButton, saveAsButton;
@@ -92,12 +92,12 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 	}
 
 	private void initTextPane() {
-		textPane = new DocumentTextPane();
-		textPane.setText(document.getContent());
-		textPane.setCaretPosition(0);
-		textPane.setFontSize(fontSlider.getValue());
-		textPane.getDocument().addDocumentListener(this);
-		scrollPane = new WebScrollPane(textPane);
+		documentTextPanePanel = new DocumentTextPanePanel();
+		documentTextPanePanel.getTextPane().setText(document.getContent());
+		documentTextPanePanel.getTextPane().setCaretPosition(0);
+		documentTextPanePanel.setFontSize(fontSlider.getValue());
+		documentTextPanePanel.getTextPane().getDocument().addDocumentListener(this);
+		scrollPane = new WebScrollPane(documentTextPanePanel);
 		scrollPane.setDrawBorder(false);
 		scrollPane.setFocusable(false);
 		scrollPane.getViewport().setOpaque(false);
@@ -189,7 +189,7 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 			return;
 		}
 		document.setLastModifiedDate(System.currentTimeMillis());
-		document.setContent(textPane.getText());
+		document.setContent(documentTextPanePanel.getTextPane().getText());
 		try {
 			changeDocumentSavedStateAndUpdateGui(true);
 			DocumentManager.INSTANCE.saveDocument(document);
@@ -205,7 +205,7 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 		fontSlider.setFocusable(false);
 		fontSlider.setValue(17);
 		fontSlider.addChangeListener(e -> {
-			textPane.setFontSize(fontSlider.getValue());
+			documentTextPanePanel.setFontSize(fontSlider.getValue());
 		});
 		fontSlider.setMinorTickSpacing(1); // step
 		fontSlider.setSnapToTicks(true); // should be activated for custom tick space

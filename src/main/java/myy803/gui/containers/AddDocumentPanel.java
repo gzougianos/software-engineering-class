@@ -15,7 +15,7 @@ import javax.swing.border.EmptyBorder;
 import com.alee.laf.scroll.WebScrollPane;
 
 import myy803.DocumentManager;
-import myy803.gui.DocumentTextPane;
+import myy803.gui.DocumentTextPanePanel;
 import myy803.gui.Icon;
 import myy803.gui.MainFrame;
 import myy803.gui.SwingUtils;
@@ -25,7 +25,7 @@ import myy803.model.DocumentType;
 public class AddDocumentPanel extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 8694070220324964236L;
 	private DocumentTypeLabel articleLabel, reportLabel, bookLabel, letterLabel;
-	private DocumentTextPane previewPane;
+	private DocumentTextPanePanel documentTextPanePanel;
 	private WebScrollPane previewScrollPane;
 	private DocumentType selectedDocumentType;
 
@@ -58,15 +58,15 @@ public class AddDocumentPanel extends JPanel implements ActionListener {
 		createButton.addActionListener(this);
 		inheritedPanel.add(SwingUtils.createFlowPanel(FlowLayout.CENTER, createButton), BorderLayout.PAGE_END);
 
-		previewPane = new DocumentTextPane();
-		previewPane.setEditable(false);
-		previewPane.setFocusable(false);
-		previewPane.setOpaque(false);
-		previewPane.setBorder(null);
+		documentTextPanePanel = new DocumentTextPanePanel();
+		documentTextPanePanel.getTextPane().setEditable(false);
+		documentTextPanePanel.getTextPane().setFocusable(false);
+		documentTextPanePanel.getTextPane().setOpaque(false);
+		documentTextPanePanel.getTextPane().setBorder(null);
 
 		JPanel outerPanel = new JPanel(new BorderLayout());
 		outerPanel.setBorder(SwingUtils.createTitledBorder("Preview:"));
-		previewScrollPane = new WebScrollPane(previewPane);
+		previewScrollPane = new WebScrollPane(documentTextPanePanel);
 		previewScrollPane.setDrawBorder(false);
 		previewScrollPane.setFocusable(false);
 		previewScrollPane.getViewport().setOpaque(false);
@@ -85,7 +85,7 @@ public class AddDocumentPanel extends JPanel implements ActionListener {
 		if (selectedDocumentType != null) {
 			this.selectedDocumentType = selectedDocumentType;
 			String preview = DocumentManager.INSTANCE.createDocument(selectedDocumentType).getContent();
-			previewPane.setText(preview);
+			documentTextPanePanel.getTextPane().setText(preview);
 			SwingUtilities.invokeLater(() -> previewScrollPane.getVerticalScrollBar().setValue(0));
 		}
 	}
