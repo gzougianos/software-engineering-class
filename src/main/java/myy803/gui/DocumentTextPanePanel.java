@@ -2,9 +2,11 @@ package myy803.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
@@ -72,14 +74,38 @@ public class DocumentTextPanePanel extends JPanel implements DocumentListener {
 	}
 
 	private void fixLines() {
-		linesTextArea.setText("");
 		int lines = textPane.getText().split(System.lineSeparator()).length;
+		//If line count did not change, do nothing
+		if (lines + 1 == linesTextArea.getLineCount())
+			return;
+		JScrollPane parentScrollPane = getParentScrollPane();
+		int verticalScrollAmount = -1;
+		if (parentScrollPane != null)
+			verticalScrollAmount = parentScrollPane.getVerticalScrollBar().getValue();
+		linesTextArea.setText("");
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < lines; i++) {
 			sb.append(i);
 			sb.append(System.lineSeparator());
 		}
 		linesTextArea.setText(sb.toString());
+		//When appending text to JTextArea, scrollpane scrolls to bottom
+		//So we have to restore the scroller where it was
+		if (parentScrollPane != null) {
+			final int amount = verticalScrollAmount;
+			SwingUtilities.invokeLater(() -> parentScrollPane.getVerticalScrollBar().setValue(amount));
+		}
+	}
+
+	private JScrollPane getParentScrollPane() {
+		Component parent = getParent();
+		while (parent != null) {
+			if (parent instanceof JScrollPane) {
+				return (JScrollPane) parent;
+			}
+			parent = parent.getParent();
+		}
+		return null;
 	}
 
 	public void setFontSize(int size) {
