@@ -28,7 +28,7 @@ public enum DocumentManager {
 
 	private void initPrototypes() {
 		for (DocumentType docType : DocumentType.values()) {
-			Document doc = new Document("", System.currentTimeMillis(), "", 1, "", docType, "");
+			Document doc = new Document(System.currentTimeMillis(), "", 1, "", docType, "");
 			doc.setContent(loadTemplate(docType));
 			prototypes.put(docType, doc);
 		}

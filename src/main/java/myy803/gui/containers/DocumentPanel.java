@@ -1,11 +1,13 @@
 package myy803.gui.containers;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 
 import javax.swing.AbstractAction;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -13,6 +15,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
@@ -47,6 +50,8 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 	private JSlider fontSlider;
 	private JButton changeToolbarLocationButton, saveButton, saveAsButton;
 	private JButton loadButton;
+	private JTextField copyrightField;
+	private JLabel authorLabel;
 
 	public DocumentPanel(Document document) {
 		super(new BorderLayout());
@@ -81,13 +86,21 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
 
-		JLabel authorLabel = new JLabel("Author: " + document.getAuthor());
+		authorLabel = new JLabel("Author: " + document.getAuthor());
 		authorLabel.setFont(MainFrame.MAIN_FONT);
 		mainPanel.add(authorLabel);
 
-		JLabel copyrightsLabel = new JLabel("Copyright: " + document.getCopyright());
+		mainPanel.add(Box.createRigidArea(new Dimension(10, 1)));
+
+		JLabel copyrightsLabel = new JLabel("Copyright: ");
 		copyrightsLabel.setFont(MainFrame.MAIN_FONT);
 		mainPanel.add(copyrightsLabel);
+
+		copyrightField = new JTextField(10);
+		copyrightField.setText(document.getCopyright());
+		copyrightField.setFont(MainFrame.MAIN_FONT);
+		mainPanel.add(SwingUtils.createFlowPanel(copyrightField));
+		mainPanel.add(Box.createHorizontalGlue());
 		return mainPanel;
 	}
 
@@ -165,21 +178,14 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 		DocumentFileChooser chooser = new DocumentFileChooser(getDocument());
 		chooser.setDialogTitle("Save document");
 		if (chooser.showSaveDialog(DocumentPanel.this) == JFileChooser.APPROVE_OPTION) {
-			File oldPath = document.getPath();
 			File selectedFile = chooser.getSelectedFile();
 			if (!selectedFile.getName().endsWith(Document.FILE_EXTENSION))
 				selectedFile = new File(selectedFile.getAbsolutePath() + Document.FILE_EXTENSION);
 			Setting.LAST_DIRECTORY_SAVED.update(selectedFile.getParentFile().getAbsolutePath());
 			document.setPath(selectedFile);
-			document.setLastModifiedDate(System.currentTimeMillis());
-			try {
-				changeDocumentSavedStateAndUpdateGui(true);
-				DocumentManager.INSTANCE.saveDocument(document);
-			} catch (IOException e1) {
-				System.err.println("Error saving as document in " + document.getPath().getAbsolutePath());
-				e1.printStackTrace();
-				document.setPath(oldPath);
-			}
+			parseValues();
+			saveDoc();
+			changeDocumentSavedStateAndUpdateGui(true);
 		}
 	}
 
@@ -188,13 +194,24 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 			doSaveAs();
 			return;
 		}
+		parseValues();
+		saveDoc();
+		changeDocumentSavedStateAndUpdateGui(true);
+	}
+
+	private void parseValues() {
 		document.setLastModifiedDate(System.currentTimeMillis());
 		document.setContent(documentTextPanePanel.getTextPane().getText());
+		document.setCopyright(copyrightField.getText());
+
+	}
+
+	private void saveDoc() {
 		try {
 			changeDocumentSavedStateAndUpdateGui(true);
 			DocumentManager.INSTANCE.saveDocument(document);
 		} catch (IOException e1) {
-			System.err.println("Error saving document in " + document.getPath().getAbsolutePath());
+			System.err.println("Error saving as document in " + document.getPath().getAbsolutePath());
 			e1.printStackTrace();
 		}
 	}
@@ -219,16 +236,31 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 	@Override
 	public void insertUpdate(DocumentEvent e) {
 		changeDocumentSavedStateAndUpdateGui(false);
+		updateAuthor(e);
 	}
 
 	@Override
 	public void removeUpdate(DocumentEvent e) {
 		changeDocumentSavedStateAndUpdateGui(false);
+		updateAuthor(e);
 	}
 
 	@Override
 	public void changedUpdate(DocumentEvent e) {
-		changeDocumentSavedStateAndUpdateGui(false);
+	}
+
+	private void updateAuthor(DocumentEvent e) {
+		Document clone = document.clone();
+		clone.setContent(documentTextPanePanel.getTextPane().getText());
+		int authorCommandOffset = clone.getContent().indexOf("\\author{");
+		int authorCommandEndOffset = clone.getContent().indexOf("}", authorCommandOffset);
+		if (e.getOffset() >= authorCommandOffset && e.getOffset() <= authorCommandEndOffset) {
+			String author = clone.getAuthor();
+			if (author.length() > 35)
+				authorLabel.setText("Author: " + clone.getAuthor().substring(0, 35) + "...");
+			else
+				authorLabel.setText("Author: " + clone.getAuthor());
+		}
 	}
 
 	private void changeDocumentSavedStateAndUpdateGui(boolean saved) {

@@ -29,6 +29,25 @@ public class DocumentRelatedTests {
 	}
 
 	@Test
+	public void authorTest() {
+		Document doc = DM.createDocument(DocumentType.BOOK);
+		doc.setAuthor("Eleftheria", "Tsaknaki");
+		assertTrue(doc.getContent().contains("\\author{Eleftheria \\and Tsaknaki}"));
+
+		//Manual replace
+		String replace = doc.getContent().replaceAll("\\\\author\\{Eleftheria \\\\and Tsaknaki\\}",
+				"\\\\author\\{Tziolas \\\\and Giorgos\\}");
+		doc.setContent(replace);
+		assertEquals(doc.getAuthor(), "Tziolas, Giorgos");
+
+		doc.setAuthor("Zougianos", "Giorgos", "Zarras");
+		assertEquals(doc.getAuthor(), "Zougianos, Giorgos, Zarras");
+
+		doc.setAuthor((String) null);
+		assertEquals(doc.getAuthor(), "-");
+	}
+
+	@Test
 	public void allDocTypesHaveTemplate() {
 		for (DocumentType docType : DocumentType.values()) {
 			Document doc = DM.createDocument(docType);
