@@ -8,10 +8,8 @@ import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.Window;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
-import java.util.Locale;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.BorderFactory;
@@ -21,12 +19,23 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 import javax.swing.Timer;
 import javax.swing.border.TitledBorder;
 
 public class SwingUtils {
+	private static final SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss");
+
+	/**
+	 * Formats the given timestamp to a string.
+	 * @see SwingUtils#format
+	 * @param date
+	 * @return the formatted string
+	 */
+	public static String formatDate(long date) {
+		return format.format(new Date(date));
+	}
+
 	/**
 	 * Converts the given s to HTML string, with fixed font (ACTIVE_FONT).<br>
 	 * Mostly used for tooltips in components.
@@ -173,20 +182,6 @@ public class SwingUtils {
 	}
 
 	/**
-	 * Formats kilometres. e.g: If kilos 10000 it will return 10.000
-	 * 
-	 * @param kilos
-	 * @return the formatted string with kilos
-	 */
-	public static String formatKilometres(int kilos) {
-		DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
-		DecimalFormatSymbols symbols = formatter.getDecimalFormatSymbols();
-		symbols.setGroupingSeparator('.');
-		formatter.setDecimalFormatSymbols(symbols);
-		return formatter.format(kilos);
-	}
-
-	/**
 	 * Creates a titled border with the active font.
 	 * 
 	 * @param title
@@ -196,15 +191,6 @@ public class SwingUtils {
 		TitledBorder b = BorderFactory.createTitledBorder(title);
 		b.setTitleFont(MAIN_FONT);
 		return b;
-	}
-
-	public static JTextField createSimpleTextField(String text) {
-		JTextField txt = new JTextField(text);
-		txt.setFont(MAIN_FONT);
-		txt.setBorder(BorderFactory.createEmptyBorder());
-		txt.setFocusable(false);
-		txt.setEditable(false);
-		return txt;
 	}
 
 	public static JPanel createFlowPanel(int align, Component... components) {

@@ -1,6 +1,7 @@
 package myy803.gui.containers;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -51,7 +52,7 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 	private JButton changeToolbarLocationButton, saveButton, saveAsButton;
 	private JButton loadButton;
 	private JTextField copyrightField;
-	private JLabel authorLabel;
+	private JLabel authorLabel, lastModifiedDateField;
 
 	public DocumentPanel(Document document) {
 		super(new BorderLayout());
@@ -85,22 +86,31 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 	private JPanel createBottomBar() {
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
-
+		final Component space = Box.createRigidArea(new Dimension(10, 1));
 		authorLabel = new JLabel("Author: " + document.getAuthor());
 		authorLabel.setFont(MainFrame.MAIN_FONT);
 		mainPanel.add(authorLabel);
 
-		mainPanel.add(Box.createRigidArea(new Dimension(10, 1)));
+		mainPanel.add(space);
 
 		JLabel copyrightsLabel = new JLabel("Copyright: ");
 		copyrightsLabel.setFont(MainFrame.MAIN_FONT);
 		mainPanel.add(copyrightsLabel);
+
+		mainPanel.add(space);
 
 		copyrightField = new JTextField(10);
 		copyrightField.setText(document.getCopyright());
 		copyrightField.setFont(MainFrame.MAIN_FONT);
 		mainPanel.add(SwingUtils.createFlowPanel(copyrightField));
 		mainPanel.add(Box.createHorizontalGlue());
+
+		lastModifiedDateField = new JLabel("Last Modified Date: " + SwingUtils.formatDate(document.getLastModifiedDate()));
+		lastModifiedDateField.setFont(MainFrame.MAIN_FONT);
+		mainPanel.add(lastModifiedDateField);
+
+		mainPanel.add(space);
+
 		return mainPanel;
 	}
 
@@ -139,21 +149,21 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 		loadButton = new JButton(Icon.LOAD.toImageIcon(ICON_DIMENSION));
 		loadButton.setFont(MainFrame.MAIN_FONT);
 		loadButton.setToolTipText(SwingUtils.toHTML("Load file"));
-		loadButton.addActionListener(e -> doLoad());
+		loadButton.addActionListener(e -> onLoad());
 
 		saveButton = new JButton(Icon.SAVE.toImageIcon(ICON_DIMENSION));
 		saveButton.setFont(MainFrame.MAIN_FONT);
 		saveButton.setToolTipText(SwingUtils.toHTML("Save file"));
-		saveButton.addActionListener(e -> doSave());
+		saveButton.addActionListener(e -> onSave());
 		saveButton.setEnabled(!getDocument().isSaved());
 
 		saveAsButton = new JButton(Icon.SAVE_AS.toImageIcon(20));
 		saveAsButton.setFont(MainFrame.MAIN_FONT);
 		saveAsButton.setToolTipText(SwingUtils.toHTML("Save file as..."));
-		saveAsButton.addActionListener(e -> doSaveAs());
+		saveAsButton.addActionListener(e -> onSaveAs());
 	}
 
-	private void doLoad() {
+	private void onLoad() {
 		DocumentFileChooser chooser = new DocumentFileChooser();
 		chooser.setDialogTitle("Load document");
 		if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
@@ -174,7 +184,7 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 		}
 	}
 
-	private void doSaveAs() {
+	private void onSaveAs() {
 		DocumentFileChooser chooser = new DocumentFileChooser(getDocument());
 		chooser.setDialogTitle("Save document");
 		if (chooser.showSaveDialog(DocumentPanel.this) == JFileChooser.APPROVE_OPTION) {
@@ -186,17 +196,19 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 			parseValues();
 			saveDoc();
 			changeDocumentSavedStateAndUpdateGui(true);
+			lastModifiedDateField.setText("Last Modified Date: " + SwingUtils.formatDate(document.getLastModifiedDate()));
 		}
 	}
 
-	private void doSave() {
+	private void onSave() {
 		if (!document.getPath().exists()) {
-			doSaveAs();
+			onSaveAs();
 			return;
 		}
 		parseValues();
 		saveDoc();
 		changeDocumentSavedStateAndUpdateGui(true);
+		lastModifiedDateField.setText("Last Modified Date: " + SwingUtils.formatDate(document.getLastModifiedDate()));
 	}
 
 	private void parseValues() {
