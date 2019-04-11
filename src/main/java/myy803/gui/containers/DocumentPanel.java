@@ -47,7 +47,7 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 	private DocumentTextPanePanel documentTextPanePanel;
 	private WebScrollPane scrollPane;
 	private JSlider fontSlider;
-	private JButton changeToolbarLocationButton, saveButton, saveAsButton;
+	private JButton changeToolbarLocationButton, saveButton, saveAsButton, commandsButton;
 	private JButton loadButton;
 	private JTextField copyrightField;
 	private JLabel authorLabel, lastModifiedDateField;
@@ -62,6 +62,8 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 		toolbar.add(loadButton);
 		toolbar.add(saveButton);
 		toolbar.add(saveAsButton);
+		toolbar.addSeparator();
+		toolbar.add(commandsButton);
 		toolbar.addToEnd(fontSlider);
 		toolbar.addSeparatorToEnd();
 		toolbar.addToEnd(changeToolbarLocationButton);
@@ -156,10 +158,22 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 		saveButton.addActionListener(e -> onSave());
 		saveButton.setEnabled(!getDocument().isSaved());
 
-		saveAsButton = new JButton(Icon.SAVE_AS.toImageIcon(20));
+		saveAsButton = new JButton(Icon.SAVE_AS.toImageIcon(ICON_DIMENSION));
 		saveAsButton.setFont(MainFrame.MAIN_FONT);
 		saveAsButton.setToolTipText(SwingUtils.toHTML("Save file as..."));
 		saveAsButton.addActionListener(e -> onSaveAs());
+
+		commandsButton = new JButton(Icon.COMMAND.toImageIcon(ICON_DIMENSION));
+		commandsButton.setFont(MainFrame.MAIN_FONT);
+		commandsButton.setToolTipText(SwingUtils.toHTML("Add command..."));
+		commandsButton.addActionListener(e -> openCommandsDialog());
+	}
+
+	private void openCommandsDialog() {
+		CommandsPanel panel = new CommandsPanel(document.getDocumentType());
+		if (SwingUtils.createDoubleOptionPanel(panel, "Add command", Icon.COMMAND, "Add", "Cancel")) {
+
+		}
 	}
 
 	private void onLoad() {
