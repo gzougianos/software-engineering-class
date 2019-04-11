@@ -126,11 +126,12 @@ public class AddDocumentPanel extends JPanel implements ActionListener {
 		return main;
 	}
 
-	private void fixRecentFiles() {
+	public void fixRecentFiles() {
 		recentFilesPanel.removeAll();
 		String[] recentFiles = RecentFileManager.INSTANCE.getFiles();
 		if (recentFiles.length > 0) {
-			for (String recentFilePath : recentFiles) {
+			for (int i = recentFiles.length - 1; i >= 0; i--) {
+				String recentFilePath = recentFiles[i];
 				RecentFilePanel rfp = new RecentFilePanel(recentFilePath);
 				JPanel borderLayout = new JPanel(new BorderLayout());
 				borderLayout.add(rfp, BorderLayout.PAGE_START);

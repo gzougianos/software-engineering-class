@@ -108,6 +108,7 @@ public class RecentFilePanel extends JPanel implements MouseListener {
 				MainFrame.getInstance().getTabbedPanel().createTabAndShowDocument(doc);
 			}
 			RecentFileManager.INSTANCE.push(doc);
+			MainFrame.getInstance().getTabbedPanel().getAddDocPanel().fixRecentFiles();
 		} catch (ClassNotFoundException | IOException e1) {
 			System.err.println("Error reading file " + selectedFile.getAbsolutePath());
 			e1.printStackTrace();
