@@ -16,7 +16,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import com.alee.laf.scroll.WebScrollPane;
@@ -78,10 +77,8 @@ public class AddDocumentPanel extends JPanel implements ActionListener {
 		previewScrollPane = new WebScrollPane(documentTextPanePanel);
 		previewScrollPane.setDrawBorder(false);
 		previewScrollPane.setFocusable(false);
-		previewScrollPane.getViewport().setOpaque(false);
 		previewScrollPane.setOpaque(false);
-		previewScrollPane.getVerticalScrollBar()
-				.setUnitIncrement(previewScrollPane.getVerticalScrollBar().getUnitIncrement() * 10);
+		SwingUtils.increaseScrollBarSpeed(previewScrollPane, 40);
 		outerPanel.add(previewScrollPane);
 
 		JPanel centeredPanel = new JPanel(new BorderLayout());
@@ -181,7 +178,7 @@ public class AddDocumentPanel extends JPanel implements ActionListener {
 			this.selectedDocumentType = selectedDocumentType;
 			String preview = DocumentManager.INSTANCE.createDocument(selectedDocumentType).getContent();
 			documentTextPanePanel.getTextPane().setText(preview);
-			SwingUtilities.invokeLater(() -> previewScrollPane.getVerticalScrollBar().setValue(0));
+			//			SwingUtilities.invokeLater(() -> previewScrollPane.getVerticalScrollBar().setValue(0));
 		}
 	}
 

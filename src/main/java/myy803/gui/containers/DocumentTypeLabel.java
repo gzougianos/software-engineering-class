@@ -38,6 +38,8 @@ public class DocumentTypeLabel extends JLabel {
 	}
 
 	public void onMouseClick() {
+		if (isChosen()) //If it is already choosen
+			return;
 		Component parent = getParent();
 		if (parent instanceof JPanel) {
 			JPanel parentPanel = (JPanel) parent;
@@ -49,7 +51,6 @@ public class DocumentTypeLabel extends JLabel {
 				}
 			}
 			setChosen(true);
-			repaint();
 			addDocumentPanel.onSelectionChange(getDocumentType());
 		}
 	}
