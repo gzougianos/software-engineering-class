@@ -164,24 +164,7 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 	}
 
 	private void onLoad() {
-		DocumentFileChooser chooser = new DocumentFileChooser();
-		chooser.setDialogTitle("Load document");
-		if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-			File selectedFile = chooser.getSelectedFile();
-			try {
-				Document doc = DocumentManager.INSTANCE.loadDocument(selectedFile);
-				// Check if this file is already opened
-				if (DocumentManager.INSTANCE.getDocuments().contains(doc)) {
-					MainFrame.getInstance().getTabbedPanel().openDocumentTab(doc);
-				} else {
-					DocumentManager.INSTANCE.getDocuments().add(doc);
-					MainFrame.getInstance().getTabbedPanel().createTabAndShowDocument(doc);
-				}
-			} catch (ClassNotFoundException | IOException e) {
-				System.err.println("Error reading file " + selectedFile.getAbsolutePath());
-				e.printStackTrace();
-			}
-		}
+		MainFrame.getInstance().getTabbedPanel().getAddDocPanel().onLoad();
 	}
 
 	private void onSaveAs() {
@@ -215,7 +198,6 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 		document.setLastModifiedDate(System.currentTimeMillis());
 		document.setContent(documentTextPanePanel.getTextPane().getText());
 		document.setCopyright(copyrightField.getText());
-
 	}
 
 	private void saveDoc() {
@@ -226,6 +208,7 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 			System.err.println("Error saving as document in " + document.getPath().getAbsolutePath());
 			e1.printStackTrace();
 		}
+
 	}
 
 	private void initFontSlider() {

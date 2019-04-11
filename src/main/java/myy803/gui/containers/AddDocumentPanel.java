@@ -1,13 +1,20 @@
 package myy803.gui.containers;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
@@ -15,9 +22,12 @@ import javax.swing.border.EmptyBorder;
 import com.alee.laf.scroll.WebScrollPane;
 
 import myy803.DocumentManager;
+import myy803.RecentFileManager;
+import myy803.gui.DocumentFileChooser;
 import myy803.gui.DocumentTextPanePanel;
 import myy803.gui.Icon;
 import myy803.gui.MainFrame;
+import myy803.gui.RecentFilePanel;
 import myy803.gui.SwingUtils;
 import myy803.model.Document;
 import myy803.model.DocumentType;
@@ -28,6 +38,7 @@ public class AddDocumentPanel extends JPanel implements ActionListener {
 	private DocumentTextPanePanel documentTextPanePanel;
 	private WebScrollPane previewScrollPane;
 	private DocumentType selectedDocumentType;
+	private JPanel recentFilesPanel;
 
 	public AddDocumentPanel() {
 		super(new BorderLayout(25, 20));
@@ -75,10 +86,93 @@ public class AddDocumentPanel extends JPanel implements ActionListener {
 				.setUnitIncrement(previewScrollPane.getVerticalScrollBar().getUnitIncrement() * 10);
 		outerPanel.add(previewScrollPane);
 
-		add(inheritedPanel, BorderLayout.PAGE_START);
-		add(outerPanel, BorderLayout.CENTER);
+		JPanel centeredPanel = new JPanel(new BorderLayout());
+		centeredPanel.add(inheritedPanel, BorderLayout.PAGE_START);
+		centeredPanel.add(outerPanel, BorderLayout.CENTER);
+
+		add(centeredPanel, BorderLayout.CENTER);
+		add(createFileOpenPanel(), BorderLayout.LINE_START);
 
 		articleLabel.onMouseClick(); //Initial selection
+	}
+
+	private JPanel createFileOpenPanel() {
+		JPanel main = new JPanel(new BorderLayout());
+		Dimension dim = main.getPreferredSize();
+		dim.width = 225;
+		main.setPreferredSize(dim);
+
+		recentFilesPanel = new JPanel();
+		recentFilesPanel.setLayout(new BoxLayout(recentFilesPanel, BoxLayout.Y_AXIS));
+
+		fixRecentFiles();
+
+		JPanel borderLayout = new JPanel(new BorderLayout());
+		borderLayout.add(recentFilesPanel, BorderLayout.PAGE_START);
+		borderLayout.setBorder(SwingUtils.createTitledBorder("Recent Files"));
+		WebScrollPane sp = new WebScrollPane(borderLayout);
+		sp.setDrawBorder(false);
+		sp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		sp.setMaximumSize(dim);
+		sp.setPreferredSize(dim);
+		main.add(sp, BorderLayout.CENTER);
+
+		JButton loadDocumentButton = new JButton("Load Document");
+		loadDocumentButton.setFont(MainFrame.MAIN_FONT);
+		loadDocumentButton.setIcon(Icon.LOAD.toImageIcon(16));
+		loadDocumentButton.addActionListener(e -> onLoad());
+		main.add(loadDocumentButton, BorderLayout.PAGE_END);
+
+		return main;
+	}
+
+	private void fixRecentFiles() {
+		recentFilesPanel.removeAll();
+		String[] recentFiles = RecentFileManager.INSTANCE.getFiles();
+		if (recentFiles.length > 0) {
+			for (String recentFilePath : recentFiles) {
+				RecentFilePanel rfp = new RecentFilePanel(recentFilePath);
+				JPanel borderLayout = new JPanel(new BorderLayout());
+				borderLayout.add(rfp, BorderLayout.PAGE_START);
+				Dimension dim2 = rfp.getPreferredSize();
+				dim2.width = 200;
+				rfp.setPreferredSize(dim2);
+				recentFilesPanel.add(borderLayout);
+				recentFilesPanel.add(Box.createRigidArea(new Dimension(1, 5)));
+			}
+		} else {
+			JLabel label = new JLabel("No files opened recently.");
+			label.setFont(MainFrame.MAIN_FONT);
+			label.setHorizontalAlignment(JLabel.CENTER);
+			recentFilesPanel.add(label);
+		}
+		recentFilesPanel.add(Box.createVerticalGlue());
+		recentFilesPanel.repaint();
+		recentFilesPanel.revalidate();
+	}
+
+	public void onLoad() {
+		DocumentFileChooser chooser = new DocumentFileChooser();
+		chooser.setDialogTitle("Load document");
+		if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+			File selectedFile = chooser.getSelectedFile();
+			try {
+				Document doc = DocumentManager.INSTANCE.loadDocument(selectedFile);
+				// Check if this file is already opened
+				if (DocumentManager.INSTANCE.getDocuments().contains(doc)) {
+					MainFrame.getInstance().getTabbedPanel().openDocumentTab(doc);
+				} else {
+					DocumentManager.INSTANCE.getDocuments().add(doc);
+					MainFrame.getInstance().getTabbedPanel().createTabAndShowDocument(doc);
+				}
+				RecentFileManager.INSTANCE.push(doc);
+				fixRecentFiles();
+			} catch (ClassNotFoundException | IOException e) {
+				System.err.println("Error reading file " + selectedFile.getAbsolutePath());
+				e.printStackTrace();
+			}
+
+		}
 	}
 
 	public void onSelectionChange(DocumentType selectedDocumentType) {

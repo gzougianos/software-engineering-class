@@ -5,6 +5,7 @@ import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import myy803.RecentFileManager;
 import myy803.commons.Setting;
 
 public class FrameWindowListener extends WindowAdapter {
@@ -12,6 +13,7 @@ public class FrameWindowListener extends WindowAdapter {
 	public void windowClosing(WindowEvent evt) {
 		MainFrame.getInstance().setVisible(false);
 		saveLocationAndSize(evt);
+		RecentFileManager.INSTANCE.save();
 		Setting.save();
 		System.exit(0);
 	}

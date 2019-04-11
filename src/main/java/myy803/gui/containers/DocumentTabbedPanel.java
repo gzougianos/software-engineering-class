@@ -57,7 +57,7 @@ public class DocumentTabbedPanel extends JTabbedPane {
 			setSelectedIndex(index);
 	}
 
-	private static Icon getIconBasedOnDocType(DocumentType docType) {
+	public static Icon getIconBasedOnDocType(DocumentType docType) {
 		switch (docType) {
 			case ARTICLE:
 				return Icon.ARTICLE_SMALL;
@@ -75,6 +75,10 @@ public class DocumentTabbedPanel extends JTabbedPane {
 			c.titleLabel.repaint();
 			c.revalidate();
 		}
+	}
+
+	public AddDocumentPanel getAddDocPanel() {
+		return addDocPanel;
 	}
 
 	private static class CloseTabComponent extends JPanel implements ActionListener {

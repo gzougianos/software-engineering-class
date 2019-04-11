@@ -12,6 +12,7 @@ import javax.swing.UIManager;
 import com.alee.laf.WebLookAndFeel;
 
 import myy803.DocumentManager;
+import myy803.RecentFileManager;
 import myy803.commons.Files;
 import myy803.commons.Setting;
 import myy803.gui.containers.DocumentTabbedPanel;
@@ -62,6 +63,7 @@ public class MainFrame extends JFrame {
 		Setting.initialize();
 		DocumentManager.INSTANCE.hashCode(); //load document manager
 		Command.CHAPTER.hashCode(); //load commands
+		RecentFileManager.INSTANCE.hashCode(); //init recent file manager
 	}
 
 	/**
