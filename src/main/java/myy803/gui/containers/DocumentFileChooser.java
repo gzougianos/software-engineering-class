@@ -1,4 +1,4 @@
-package myy803.gui;
+package myy803.gui.containers;
 
 import java.io.File;
 import java.util.List;
@@ -9,6 +9,8 @@ import javax.swing.filechooser.FileFilter;
 import com.alee.laf.filechooser.WebFileChooser;
 
 import myy803.commons.Setting;
+import myy803.gui.ExternalSwingUtils;
+import myy803.gui.SwingUtils;
 import myy803.model.Document;
 
 public class DocumentFileChooser extends WebFileChooser {

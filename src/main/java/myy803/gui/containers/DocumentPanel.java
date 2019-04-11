@@ -28,8 +28,6 @@ import com.alee.laf.toolbar.WebToolBar;
 
 import myy803.DocumentManager;
 import myy803.commons.Setting;
-import myy803.gui.DocumentFileChooser;
-import myy803.gui.DocumentTextPanePanel;
 import myy803.gui.Icon;
 import myy803.gui.MainFrame;
 import myy803.gui.SwingUtils;

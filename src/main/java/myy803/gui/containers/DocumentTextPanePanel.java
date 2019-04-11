@@ -1,4 +1,4 @@
-package myy803.gui;
+package myy803.gui.containers;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -6,6 +6,9 @@ import java.awt.Color;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
+
+import myy803.gui.DocumentStyledDocument;
+import myy803.gui.MainFrame;
 
 public class DocumentTextPanePanel extends JPanel {
 	private static final long serialVersionUID = -7993158487970819302L;

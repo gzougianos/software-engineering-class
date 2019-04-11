@@ -1,4 +1,4 @@
-package myy803.gui;
+package myy803.gui.containers;
 
 import java.awt.BorderLayout;
 import java.awt.Graphics;
@@ -15,7 +15,9 @@ import javax.swing.SwingWorker;
 
 import myy803.DocumentManager;
 import myy803.RecentFileManager;
-import myy803.gui.containers.DocumentTabbedPanel;
+import myy803.gui.Icon;
+import myy803.gui.MainFrame;
+import myy803.gui.SwingUtils;
 import myy803.model.Document;
 
 public class RecentFilePanel extends JPanel implements MouseListener {
