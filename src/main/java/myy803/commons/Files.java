@@ -7,7 +7,6 @@ public class Files {
 	public static final File MAIN_DIRECTORY = new File(System.getenv("APPDATA"), "Latex Editor");
 	public static final File RECENT_FILES = new File(MAIN_DIRECTORY, "recent_files");
 	public static final File SETTINGS = new File(MAIN_DIRECTORY, "settings.properties");
-	public static final File TEMP = new File(System.getenv("TEMP"));
 	public static final File USER_HOME = new File(System.getProperty("user.home"));
 
 	public static void initialize() {

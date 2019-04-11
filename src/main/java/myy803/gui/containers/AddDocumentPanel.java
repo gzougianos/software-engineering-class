@@ -23,6 +23,7 @@ import com.alee.laf.scroll.WebScrollPane;
 
 import myy803.DocumentManager;
 import myy803.RecentFileManager;
+import myy803.commons.Setting;
 import myy803.gui.DocumentFileChooser;
 import myy803.gui.DocumentTextPanePanel;
 import myy803.gui.Icon;
@@ -157,6 +158,8 @@ public class AddDocumentPanel extends JPanel implements ActionListener {
 		chooser.setDialogTitle("Load document");
 		if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 			File selectedFile = chooser.getSelectedFile();
+			File folder = selectedFile.getParentFile();
+			Setting.LAST_DIRECTORY_SAVED.update(folder.getAbsolutePath());
 			try {
 				Document doc = DocumentManager.INSTANCE.loadDocument(selectedFile);
 				// Check if this file is already opened

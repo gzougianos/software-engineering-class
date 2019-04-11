@@ -102,6 +102,7 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 		copyrightField = new JTextField(10);
 		copyrightField.setText(document.getCopyright());
 		copyrightField.setFont(MainFrame.MAIN_FONT);
+		copyrightField.getDocument().addDocumentListener(this);
 		mainPanel.add(SwingUtils.createFlowPanel(copyrightField));
 		mainPanel.add(Box.createHorizontalGlue());
 

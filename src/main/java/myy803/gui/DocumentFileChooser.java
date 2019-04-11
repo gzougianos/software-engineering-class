@@ -31,7 +31,7 @@ public class DocumentFileChooser extends WebFileChooser {
 	}
 
 	private void applyOptions() {
-		setFileHidingEnabled(false);
+		setFileHidingEnabled(true);
 		setAcceptAllFileFilterUsed(false);
 		setFileFilter(new FileFilter() {
 
