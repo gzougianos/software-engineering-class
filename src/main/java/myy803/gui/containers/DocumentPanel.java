@@ -20,8 +20,11 @@ import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.SimpleAttributeSet;
 
 import com.alee.laf.scroll.WebScrollPane;
 import com.alee.laf.toolbar.WebToolBar;
@@ -31,6 +34,7 @@ import myy803.commons.Setting;
 import myy803.gui.Icon;
 import myy803.gui.MainFrame;
 import myy803.gui.SwingUtils;
+import myy803.model.Command;
 import myy803.model.Document;
 
 public class DocumentPanel extends JPanel implements DocumentListener {
@@ -171,8 +175,23 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 
 	private void openCommandsDialog() {
 		CommandsPanel panel = new CommandsPanel(document.getDocumentType());
+		panel.setPreferredSize(new Dimension(500, 500));
 		if (SwingUtils.createDoubleOptionPanel(panel, "Add command", Icon.COMMAND, "Add", "Cancel")) {
-
+			Command selectedCommand = panel.getSelectedCommand();
+			int cursorIndex = documentTextPanePanel.getTextPane().getCaretPosition();
+			try {
+				documentTextPanePanel.getTextPane().getDocument().insertString(cursorIndex, selectedCommand.getContent(),
+						new SimpleAttributeSet());
+				if (selectedCommand.hasCursor()) {
+					documentTextPanePanel.getTextPane().requestFocusInWindow();
+					SwingUtilities.invokeLater(() -> {
+						int totalCursor = cursorIndex + selectedCommand.getCursorIndex();
+						documentTextPanePanel.getTextPane().setCaretPosition(totalCursor);
+					});
+				}
+			} catch (BadLocationException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

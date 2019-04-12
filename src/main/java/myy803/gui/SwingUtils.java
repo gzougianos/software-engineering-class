@@ -108,6 +108,9 @@ public class SwingUtils {
 			if (pane.getValue() == pane.getOptions()[i])
 				return i;
 		}
+		if (pane.getValue() instanceof Integer) {
+			return (int) pane.getValue();
+		}
 		return -1;
 	}
 

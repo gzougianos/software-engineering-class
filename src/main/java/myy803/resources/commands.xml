@@ -19,14 +19,14 @@
 		<description>Add subsection</description>
 		<allowed_documents>ALL</allowed_documents>
 		<disallowed_documents>LETTER</disallowed_documents>
-		<content>\section{}</content>
+		<content>\subsection{}</content>
 	</command>
 
 	<command name="SUBSUBSECTION">
 		<description>Add subsubsection</description>
 		<allowed_documents>ALL</allowed_documents>
 		<disallowed_documents>LETTER</disallowed_documents>
-		<content>\section{}</content>
+		<content>\subsubsection{}</content>
 	</command>
 
 	<command name="BEGIN_ITEMIZE">
@@ -42,10 +42,10 @@
 		<allowed_documents>ALL</allowed_documents>
 		<disallowed_documents>LETTER</disallowed_documents>
 		<content>
-			\begin{itemize}
+			\begin{enumerate}
 			\item %cursor%
 			\item ...
-			\end{itemize}
+			\end{enumerate}
 		</content>
 	</command>
 

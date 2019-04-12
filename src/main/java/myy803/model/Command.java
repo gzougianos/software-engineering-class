@@ -41,13 +41,13 @@ public enum Command {
 			return;
 		}
 		this.content = getTagValue(element, "content").trim();
+		this.content = content.replaceAll("\t", "");
+		this.content = content.replaceAll("\\\\n", System.lineSeparator());
 		this.description = getTagValue(element, "description");
 		this.allowedDocuments = getTagValue(element, "allowed_documents");
 		this.disallowedDocuments = getTagValue(element, "disallowed_documents");
 		this.cursorIndex = content.indexOf(CURSOR_INDEX_TAG);
 		this.content = content.replaceAll(CURSOR_INDEX_TAG, "");
-		this.content = content.replaceAll("\t", "");
-		this.content = content.replaceAll("\\\\n", System.lineSeparator());
 	}
 
 	public String getContent() {
