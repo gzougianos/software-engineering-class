@@ -176,9 +176,6 @@ public class DocumentStyledDocument extends DefaultStyledDocument {
 					if (isKeyword(word)) {
 						int pos = lastWhitespacePosition - word.length();
 						words.put(pos, word);
-					} else if (isProperty(word)) {
-						int pos = lastWhitespacePosition - word.length();
-						properties.put(pos, word);
 					}
 					word = "";
 				}
@@ -214,19 +211,12 @@ public class DocumentStyledDocument extends DefaultStyledDocument {
 			if (group.matches("(\\{.*\\})")) {
 				int pos = m.start(1);
 				properties.put(pos, group);
-				System.out.println(group + "  --->" + m.start(1));
 			}
 		}
-		System.out.println("0000");
 	}
 
 	private boolean isWordCharacter(char c) {
 		return Character.isLetter(c) || c == '\\';
-	}
-
-	private boolean isProperty(String word) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 	private static final boolean isKeyword(String word) {
