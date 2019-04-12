@@ -88,7 +88,9 @@ public class DocumentStyledDocument extends DefaultStyledDocument {
 	}
 
 	private void fixLines() {
-		int lines = textPane.getText().split(System.lineSeparator()).length;
+		String text = textPane.getText();
+		text = text.replaceAll("\n", System.lineSeparator());
+		int lines = text.split(System.lineSeparator()).length;
 		//If line count did not change, do nothing
 		if (lines + 1 == linesTextArea.getLineCount())
 			return;
