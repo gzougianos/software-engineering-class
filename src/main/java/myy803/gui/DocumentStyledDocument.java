@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -28,7 +30,9 @@ public class DocumentStyledDocument extends DefaultStyledDocument {
 	private JTextArea linesTextArea;
 	private Style defaultStyle;
 	private Style keywordStyle;
+	private Style propertiesStyle;
 	private HashMap<Integer, String> words = new HashMap<>();
+	private HashMap<Integer, String> properties = new HashMap<>();
 	private int fontSize;
 
 	static {
@@ -41,6 +45,7 @@ public class DocumentStyledDocument extends DefaultStyledDocument {
 		StyleContext styleContext = new StyleContext();
 		defaultStyle = styleContext.getStyle(StyleContext.DEFAULT_STYLE);
 		keywordStyle = styleContext.addStyle("Keywords", null);
+		propertiesStyle = styleContext.addStyle("Props", null);
 		fontSize = MainFrame.MAIN_FONT.getSize();
 		fixLines();
 		fixFont();
@@ -118,6 +123,12 @@ public class DocumentStyledDocument extends DefaultStyledDocument {
 		StyleConstants.setBold(keywordStyle, true);
 		StyleConstants.setFontFamily(keywordStyle, MainFrame.MAIN_FONT.getFontName());
 		StyleConstants.setFontSize(keywordStyle, fontSize);
+
+		//		StyleConstants.setForeground(propertiesStyle, new Color(200, 224, 98));
+		StyleConstants.setItalic(propertiesStyle, true);
+		StyleConstants.setFontFamily(propertiesStyle, MainFrame.MAIN_FONT.getFontName());
+		StyleConstants.setFontSize(propertiesStyle, fontSize);
+
 		StyleConstants.setFontFamily(defaultStyle, MainFrame.MAIN_FONT.getFontName());
 		StyleConstants.setFontSize(defaultStyle, fontSize);
 	}
@@ -125,13 +136,19 @@ public class DocumentStyledDocument extends DefaultStyledDocument {
 	private void refreshDocument() throws BadLocationException {
 		String text = getText(0, getLength());
 		words.clear();
+		properties.clear();
 		findWords(text);
 
 		setCharacterAttributes(0, text.length(), defaultStyle, true);
+		for (int position : properties.keySet()) {
+			String word = properties.get(position);
+			setCharacterAttributes(position, word.length(), propertiesStyle, true);
+		}
 		for (int position : words.keySet()) {
 			String word = words.get(position);
 			setCharacterAttributes(position, word.length(), keywordStyle, true);
 		}
+
 	}
 
 	private JScrollPane getParentScrollPane() {
@@ -153,12 +170,15 @@ public class DocumentStyledDocument extends DefaultStyledDocument {
 
 		for (int index = 0; index < data.length; index++) {
 			char ch = data[index];
-			if (ch != '\\' && (!(Character.isLetter(ch) || Character.isDigit(ch) || ch == '_'))) {
+			if (!isWordCharacter(ch)) {
 				lastWhitespacePosition = index;
 				if (word.length() > 0) {
 					if (isKeyword(word)) {
 						int pos = lastWhitespacePosition - word.length();
 						words.put(pos, word);
+					} else if (isProperty(word)) {
+						int pos = lastWhitespacePosition - word.length();
+						properties.put(pos, word);
 					}
 					word = "";
 				}
@@ -166,6 +186,47 @@ public class DocumentStyledDocument extends DefaultStyledDocument {
 				word += ch;
 			}
 		}
+		//		word = "";
+		//		int pos = -1;
+		//		for (int index = 0; index < data.length; index++) {
+		//			char ch = data[index];
+		//			if (ch == '{' && word.isEmpty()) {
+		//				word = "{";
+		//				pos = index;
+		//			} else {
+		//				if (ch == '}' && !word.isEmpty()) {
+		//					word += "}";
+		//					System.out.println(pos);
+		//					if (pos != -1)
+		//						properties.put(pos, word);
+		//					word = "";
+		//					pos = -1;
+		//				} else if (!word.isEmpty()) {
+		//					word += String.valueOf(ch);
+		//				}
+		//
+		//			}
+		//		}
+
+		Matcher m = Pattern.compile("\\\\*.(\\{.*\\})").matcher(content);
+		while (m.find()) {
+			String group = m.group(1);
+			if (group.matches("(\\{.*\\})")) {
+				int pos = m.start(1);
+				properties.put(pos, group);
+				System.out.println(group + "  --->" + m.start(1));
+			}
+		}
+		System.out.println("0000");
+	}
+
+	private boolean isWordCharacter(char c) {
+		return Character.isLetter(c) || c == '\\';
+	}
+
+	private boolean isProperty(String word) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	private static final boolean isKeyword(String word) {
