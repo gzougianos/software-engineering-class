@@ -1,11 +1,11 @@
 package myy803.gui.containers;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 import javax.swing.AbstractAction;
 import javax.swing.Box;
@@ -36,6 +36,7 @@ import myy803.gui.MainFrame;
 import myy803.gui.SwingUtils;
 import myy803.model.Command;
 import myy803.model.Document;
+import myy803.model.DocumentType;
 
 public class DocumentPanel extends JPanel implements DocumentListener {
 	private static final long serialVersionUID = -1467388562407975227L;
@@ -90,18 +91,20 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 	private JPanel createBottomBar() {
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
-		final Component space = Box.createRigidArea(new Dimension(10, 1));
+		mainPanel.add(Box.createHorizontalStrut(10));
+
 		authorLabel = new JLabel("Author: " + document.getAuthor());
 		authorLabel.setFont(MainFrame.MAIN_FONT);
+		authorLabel.setVisible(document.getDocumentType() != DocumentType.LETTER);
 		mainPanel.add(authorLabel);
 
-		mainPanel.add(space);
+		mainPanel.add(Box.createHorizontalStrut(10));
 
 		JLabel copyrightsLabel = new JLabel("Copyright: ");
 		copyrightsLabel.setFont(MainFrame.MAIN_FONT);
 		mainPanel.add(copyrightsLabel);
 
-		mainPanel.add(space);
+		mainPanel.add(Box.createHorizontalStrut(3));
 
 		copyrightField = new JTextField(10);
 		copyrightField.setText(document.getCopyright());
@@ -114,7 +117,7 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 		lastModifiedDateField.setFont(MainFrame.MAIN_FONT);
 		mainPanel.add(lastModifiedDateField);
 
-		mainPanel.add(space);
+		mainPanel.add(Box.createHorizontalStrut(10));
 
 		return mainPanel;
 	}
@@ -169,8 +172,15 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 
 		commandsButton = new JButton(Icon.COMMAND.toImageIcon(ICON_DIMENSION));
 		commandsButton.setFont(MainFrame.MAIN_FONT);
-		commandsButton.setToolTipText(SwingUtils.toHTML("Add command..."));
+		commandsButton.setToolTipText(SwingUtils.toHTML("This document type does not allow commands."));
 		commandsButton.addActionListener(e -> openCommandsDialog());
+		commandsButton.setEnabled(docTypeAllowsCommands());
+		if (commandsButton.isEnabled())
+			commandsButton.setToolTipText(SwingUtils.toHTML("Add command..."));
+	}
+
+	private boolean docTypeAllowsCommands() {
+		return Arrays.asList(Command.values()).stream().anyMatch(c -> c.allowsType(document.getDocumentType()));
 	}
 
 	private void openCommandsDialog() {

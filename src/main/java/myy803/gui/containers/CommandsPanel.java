@@ -40,6 +40,10 @@ public class CommandsPanel extends JPanel implements ListSelectionListener {
 		list.setSelectedIndex(0);
 	}
 
+	public int getCommandCount() {
+		return list.getModel().getSize();
+	}
+
 	private JPanel createCommandPanel() {
 		JPanel main = new JPanel(new BorderLayout());
 
