@@ -43,10 +43,9 @@ public class AddDocumentPanel extends JPanel implements ActionListener {
 
 		JPanel inheritedPanel = new JPanel(new BorderLayout());
 
-		JLabel newDocumentLabel = new JLabel("New Document");
+		JLabel newDocumentLabel = new JLabel("Create new document");
 		newDocumentLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		newDocumentLabel.setFont(MainFrame.MAIN_FONT.deriveFont(18f));
-		newDocumentLabel.setForeground(MainFrame.LIGHT_BLUE);
 		inheritedPanel.add(newDocumentLabel, BorderLayout.PAGE_START);
 
 		JPanel documentTypesPanel = new JPanel(new FlowLayout());
