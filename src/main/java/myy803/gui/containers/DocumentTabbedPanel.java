@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -14,10 +15,8 @@ import javax.swing.JTabbedPane;
 
 import myy803.DocumentManager;
 import myy803.gui.ExternalSwingUtils;
-import myy803.gui.Icon;
 import myy803.gui.MainFrame;
 import myy803.model.Document;
-import myy803.model.DocumentType;
 
 public class DocumentTabbedPanel extends JTabbedPane {
 	private static final long serialVersionUID = -7298563748251359603L;
@@ -57,19 +56,6 @@ public class DocumentTabbedPanel extends JTabbedPane {
 			setSelectedIndex(index);
 	}
 
-	public static Icon getIconBasedOnDocType(DocumentType docType) {
-		switch (docType) {
-			case ARTICLE:
-				return Icon.ARTICLE_SMALL;
-			case BOOK:
-				return Icon.BOOK_SMALL;
-			case REPORT:
-				return Icon.REPORT_SMALL;
-			default:
-				return Icon.LETTER_SMALL;
-		}
-	}
-
 	public void repaintLabels() {
 		for (CloseTabComponent c : ExternalSwingUtils.getDescendantsOfType(CloseTabComponent.class, this)) {
 			c.titleLabel.repaint();
@@ -92,7 +78,7 @@ public class DocumentTabbedPanel extends JTabbedPane {
 			this.name = doc.getName();
 			this.document = doc;
 			setOpaque(false);
-			Icon icon = getIconBasedOnDocType(doc.getDocumentType());
+			ImageIcon icon = doc.getDocumentType().getIcon(true);
 			titleLabel = new JLabel(name) {
 				private static final long serialVersionUID = 1826571417697457181L;
 
@@ -103,7 +89,7 @@ public class DocumentTabbedPanel extends JTabbedPane {
 					return doc.getName();
 				}
 			};
-			titleLabel.setIcon(icon.toImageIcon());
+			titleLabel.setIcon(icon);
 			titleLabel.setFont(MainFrame.MAIN_FONT);
 			titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 			JButton btnClose = new JButton("X");

@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingWorker;
@@ -66,8 +67,8 @@ public class RecentFilePanel extends JPanel implements MouseListener {
 				try {
 					Document doc = get();
 					if (doc != null) {
-						Icon i = DocumentTabbedPanel.getIconBasedOnDocType(doc.getDocumentType());
-						iconLabel.setIcon(i.toImageIcon());
+						ImageIcon imgIcon = doc.getDocumentType().getIcon(true);
+						iconLabel.setIcon(imgIcon);
 						authorLabel.setText(doc.getAuthor());
 						lastModifiedDateLabel.setText(SwingUtils.formatDate(doc.getLastModifiedDate()));
 					}

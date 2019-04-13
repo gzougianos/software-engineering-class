@@ -2,29 +2,32 @@ package myy803.gui.containers;
 
 import java.awt.Component;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import myy803.gui.Icon;
 import myy803.gui.MainFrame;
 import myy803.model.DocumentType;
 
-public class DocumentTypeLabel extends JLabel {
+public class DocumentTypeLabel extends JLabel implements Runnable {
 	private static final long serialVersionUID = 1928502133191516275L;
+	private static final int ICON_DIMENSION = 120;
 	private DocumentType documentType;
 	private boolean chosen;
-	private AddDocumentPanel addDocumentPanel;
 
-	public DocumentTypeLabel(AddDocumentPanel adp, DocumentType docType, String text, Icon icon) {
-		super(text);
+	public DocumentTypeLabel(DocumentType documentType) {
+		super(documentType.getName());
 		setFont(MainFrame.MAIN_FONT);
-		setIcon(icon.toImageIcon(120));
-		this.documentType = docType;
-		this.addDocumentPanel = adp;
+		Image img = documentType.getIcon().getImage().getScaledInstance(ICON_DIMENSION, ICON_DIMENSION, Image.SCALE_SMOOTH);
+		setIcon(new ImageIcon(img));
+		this.documentType = documentType;
 		this.chosen = false;
 		setBorder(new EmptyBorder(10, 10, 10, 10));
 		setHorizontalTextPosition(JLabel.CENTER);
@@ -51,7 +54,7 @@ public class DocumentTypeLabel extends JLabel {
 				}
 			}
 			setChosen(true);
-			addDocumentPanel.onSelectionChange(getDocumentType());
+			SwingUtilities.invokeLater(this);
 		}
 	}
 
@@ -74,6 +77,12 @@ public class DocumentTypeLabel extends JLabel {
 	public void setChosen(boolean chosen) {
 		this.chosen = chosen;
 		repaint();
+	}
+
+	@Override
+	public void run() {
+		MainFrame.getInstance().getTabbedPanel().getAddDocPanel().onSelectionChange(getDocumentType());
+
 	}
 
 }

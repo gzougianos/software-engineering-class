@@ -31,7 +31,6 @@ import myy803.model.DocumentType;
 
 public class AddDocumentPanel extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 8694070220324964236L;
-	private DocumentTypeLabel articleLabel, reportLabel, bookLabel, letterLabel;
 	private DocumentTextPanePanel documentTextPanePanel;
 	private WebScrollPane previewScrollPane;
 	private DocumentType selectedDocumentType;
@@ -49,14 +48,10 @@ public class AddDocumentPanel extends JPanel implements ActionListener {
 		inheritedPanel.add(newDocumentLabel, BorderLayout.PAGE_START);
 
 		JPanel documentTypesPanel = new JPanel(new FlowLayout());
-		articleLabel = new DocumentTypeLabel(this, DocumentType.ARTICLE, "Article", Icon.ARTICLE);
-		bookLabel = new DocumentTypeLabel(this, DocumentType.BOOK, "Book", Icon.BOOK);
-		reportLabel = new DocumentTypeLabel(this, DocumentType.REPORT, "Report", Icon.REPORT);
-		letterLabel = new DocumentTypeLabel(this, DocumentType.LETTER, "Letter", Icon.LETTER);
-		documentTypesPanel.add(articleLabel);
-		documentTypesPanel.add(bookLabel);
-		documentTypesPanel.add(reportLabel);
-		documentTypesPanel.add(letterLabel);
+		for (DocumentType docType : DocumentType.values()) {
+			DocumentTypeLabel label = new DocumentTypeLabel(docType);
+			documentTypesPanel.add(label);
+		}
 		inheritedPanel.add(documentTypesPanel, BorderLayout.CENTER);
 
 		JButton createButton = new JButton("Create Document");
@@ -86,8 +81,7 @@ public class AddDocumentPanel extends JPanel implements ActionListener {
 
 		add(centeredPanel, BorderLayout.CENTER);
 		add(createFileOpenPanel(), BorderLayout.LINE_START);
-
-		articleLabel.onMouseClick(); //Initial selection
+		((DocumentTypeLabel) documentTypesPanel.getComponents()[0]).onMouseClick();
 	}
 
 	private JPanel createFileOpenPanel() {
@@ -177,7 +171,6 @@ public class AddDocumentPanel extends JPanel implements ActionListener {
 			this.selectedDocumentType = selectedDocumentType;
 			String preview = DocumentManager.INSTANCE.createDocument(selectedDocumentType).getContent();
 			documentTextPanePanel.getTextPane().setText(preview);
-			//			SwingUtilities.invokeLater(() -> previewScrollPane.getVerticalScrollBar().setValue(0));
 		}
 	}
 
@@ -187,5 +180,9 @@ public class AddDocumentPanel extends JPanel implements ActionListener {
 		DocumentManager.INSTANCE.getDocuments().add(doc);
 		MainFrame.getInstance().getTabbedPanel().createTabAndShowDocument(doc);
 
+	}
+
+	public DocumentTextPanePanel getDocumentTextPanePanel() {
+		return documentTextPanePanel;
 	}
 }
