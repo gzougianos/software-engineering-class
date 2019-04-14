@@ -58,24 +58,44 @@ public class Document implements Serializable {
 	}
 
 	public void setAuthor(String... authors) {
-		StringBuilder sb = new StringBuilder("\\\\author\\{");
-		if (authors == null || authors.length == 0) {
+		if (hasAuthor()) {
+			StringBuilder sb = new StringBuilder("\\\\author\\{");
+			if (authors == null || authors.length == 0) {
+				sb.append("\\}");
+				setContent(getContent().replaceAll(AUTHOR_REGEX, sb.toString()));
+				return;
+			}
+			for (String author : authors) {
+				if (author.isEmpty())
+					continue;
+				sb.append(author.trim());
+				sb.append(" ");
+				sb.append("\\\\and");
+				sb.append(" ");
+			}
+			if (sb.toString().endsWith("\\and "))
+				sb = new StringBuilder(sb.substring(0, sb.toString().length() - " \\\\and ".length()));
 			sb.append("\\}");
 			setContent(getContent().replaceAll(AUTHOR_REGEX, sb.toString()));
-			return;
+		} else {
+			StringBuilder sb = new StringBuilder("\\author{");
+			for (String author : authors) {
+				if (author.isEmpty())
+					continue;
+				sb.append(author.trim());
+				sb.append(" ");
+				sb.append("\\and");
+				sb.append(" ");
+			}
+			if (sb.toString().endsWith("\\and "))
+				sb = new StringBuilder(sb.substring(0, sb.toString().length() - " \\and ".length()));
+			sb.append("}");
+			setContent(getContent() + System.lineSeparator() + sb.toString());
 		}
-		for (String author : authors) {
-			if (author.isEmpty())
-				continue;
-			sb.append(author);
-			sb.append(" ");
-			sb.append("\\\\and");
-			sb.append(" ");
-		}
-		if (sb.toString().endsWith("\\and "))
-			sb = new StringBuilder(sb.substring(0, sb.toString().length() - " \\\\and ".length()));
-		sb.append("\\}");
-		setContent(getContent().replaceAll(AUTHOR_REGEX, sb.toString()));
+	}
+
+	private boolean hasAuthor() {
+		return Pattern.compile(AUTHOR_REGEX).matcher(getContent()).find();
 	}
 
 	public long getLastModifiedDate() {

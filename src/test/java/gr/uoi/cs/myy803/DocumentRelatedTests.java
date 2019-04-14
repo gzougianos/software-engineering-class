@@ -42,8 +42,17 @@ public class DocumentRelatedTests {
 
 		doc.setAuthor("Zougianos", "Giorgos", "Zarras");
 		assertEquals(doc.getAuthor(), "Zougianos, Giorgos, Zarras");
-
 		doc.setAuthor((String) null);
+		assertEquals(doc.getAuthor(), "-");
+
+		//On empty content the whole command is written
+		doc.setContent("");
+		assertEquals(doc.getAuthor(), "-");
+		doc.setAuthor("Apostolos Zarras ");
+		assertEquals(doc.getAuthor(), "Apostolos Zarras");
+
+		//Test empty author
+		doc.setAuthor("       ");
 		assertEquals(doc.getAuthor(), "-");
 	}
 
