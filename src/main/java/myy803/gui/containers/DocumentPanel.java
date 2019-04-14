@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 
 import javax.swing.AbstractAction;
 import javax.swing.Box;
@@ -29,6 +28,7 @@ import javax.swing.text.SimpleAttributeSet;
 import com.alee.laf.scroll.WebScrollPane;
 import com.alee.laf.toolbar.WebToolBar;
 
+import myy803.CommandManager;
 import myy803.DocumentManager;
 import myy803.commons.Setting;
 import myy803.gui.Icon;
@@ -180,7 +180,7 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 	}
 
 	private boolean docTypeAllowsCommands() {
-		return Arrays.asList(Command.values()).stream().anyMatch(c -> c.allowsType(document.getDocumentType()));
+		return CommandManager.INSTANCE.getCommands().stream().anyMatch(c -> c.allowsType(document.getDocumentType()));
 	}
 
 	private void openCommandsDialog() {

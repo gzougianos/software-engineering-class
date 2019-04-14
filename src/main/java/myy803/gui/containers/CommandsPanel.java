@@ -17,6 +17,7 @@ import javax.swing.event.ListSelectionListener;
 
 import com.alee.laf.scroll.WebScrollPane;
 
+import myy803.CommandManager;
 import myy803.gui.MainFrame;
 import myy803.gui.SwingUtils;
 import myy803.model.Command;
@@ -123,7 +124,7 @@ public class CommandsPanel extends JPanel implements ListSelectionListener {
 			super();
 			setOpaque(false);
 			model = new DefaultListModel<>();
-			for (Command c : Command.values()) {
+			for (Command c : CommandManager.INSTANCE.getCommands()) {
 				if (c.allowsType(documentType)) {
 					model.addElement(c);
 				}
