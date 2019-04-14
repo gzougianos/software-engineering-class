@@ -77,6 +77,10 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 		add(scrollPane, BorderLayout.CENTER);
 
 		add(createBottomBar(), BorderLayout.PAGE_END);
+		addSaveShortcut();
+	}
+
+	private void addSaveShortcut() {
 		getActionMap().put("save", new AbstractAction() {
 			private static final long serialVersionUID = -7334567622977748920L;
 
@@ -86,6 +90,7 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 			}
 		});
 		getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("control S"), "save");
+
 	}
 
 	private JPanel createBottomBar() {
