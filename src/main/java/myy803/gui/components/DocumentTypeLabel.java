@@ -1,4 +1,4 @@
-package myy803.gui.containers;
+package myy803.gui.components;
 
 import java.awt.Component;
 import java.awt.Graphics;
@@ -9,21 +9,23 @@ import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import myy803.gui.Icon;
 import myy803.gui.MainFrame;
+import myy803.gui.controller.AddDocumentController;
 import myy803.model.DocumentType;
 
-public class DocumentTypeLabel extends JLabel implements Runnable {
+public class DocumentTypeLabel extends JLabel {
 	private static final long serialVersionUID = 1928502133191516275L;
 	private static final int ICON_DIMENSION = 120;
 	private DocumentType documentType;
 	private boolean chosen;
+	private AddDocumentController controller;
 
-	public DocumentTypeLabel(DocumentType documentType) {
+	public DocumentTypeLabel(AddDocumentController controller, DocumentType documentType) {
 		super(documentType.getName());
+		this.controller = controller;
 		setFont(MainFrame.MAIN_FONT);
 		Image img = documentType.getIcon().getImage().getScaledInstance(ICON_DIMENSION, ICON_DIMENSION, Image.SCALE_SMOOTH);
 		setIcon(new ImageIcon(img));
@@ -54,7 +56,7 @@ public class DocumentTypeLabel extends JLabel implements Runnable {
 				}
 			}
 			setChosen(true);
-			SwingUtilities.invokeLater(this);
+			controller.onChangeDocTypeSelection(getDocumentType());
 		}
 	}
 
@@ -77,12 +79,6 @@ public class DocumentTypeLabel extends JLabel implements Runnable {
 	public void setChosen(boolean chosen) {
 		this.chosen = chosen;
 		repaint();
-	}
-
-	@Override
-	public void run() {
-		MainFrame.getInstance().getTabbedPanel().getAddDocPanel().onSelectionChange(getDocumentType());
-
 	}
 
 }

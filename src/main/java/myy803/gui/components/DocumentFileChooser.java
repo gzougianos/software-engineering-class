@@ -1,4 +1,4 @@
-package myy803.gui.containers;
+package myy803.gui.components;
 
 import java.io.File;
 import java.util.List;

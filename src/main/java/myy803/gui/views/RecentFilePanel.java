@@ -1,11 +1,10 @@
-package myy803.gui.containers;
+package myy803.gui.views;
 
 import java.awt.BorderLayout;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.BoxLayout;
@@ -15,10 +14,10 @@ import javax.swing.JPanel;
 import javax.swing.SwingWorker;
 
 import myy803.DocumentManager;
-import myy803.RecentFileManager;
 import myy803.gui.Icon;
 import myy803.gui.MainFrame;
 import myy803.gui.SwingUtils;
+import myy803.gui.controller.AddDocumentController;
 import myy803.model.Document;
 
 public class RecentFilePanel extends JPanel implements MouseListener {
@@ -26,9 +25,11 @@ public class RecentFilePanel extends JPanel implements MouseListener {
 	private String path;
 	private JLabel iconLabel, authorLabel, lastModifiedDateLabel;
 	private boolean mouseEntered = false;
+	private AddDocumentController controller;
 
-	public RecentFilePanel(String path) {
+	public RecentFilePanel(AddDocumentController controller, String path) {
 		super(new BorderLayout(5, 0));
+		this.controller = controller;
 		this.path = path;
 
 		iconLabel = new JLabel();
@@ -100,23 +101,7 @@ public class RecentFilePanel extends JPanel implements MouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		File selectedFile = new File(path);
-		try {
-			Document doc = DocumentManager.INSTANCE.loadDocument(selectedFile);
-			// Check if this file is already opened
-			if (DocumentManager.INSTANCE.getDocuments().contains(doc)) {
-				MainFrame.getInstance().getTabbedPanel().openDocumentTab(doc);
-			} else {
-				DocumentManager.INSTANCE.getDocuments().add(doc);
-				MainFrame.getInstance().getTabbedPanel().createTabAndShowDocument(doc);
-			}
-			RecentFileManager.INSTANCE.push(doc);
-			MainFrame.getInstance().getTabbedPanel().getAddDocPanel().fixRecentFiles();
-		} catch (ClassNotFoundException | IOException e1) {
-			System.err.println("Error reading file " + selectedFile.getAbsolutePath());
-			e1.printStackTrace();
-		}
-
+		controller.loadDocument(path);
 	}
 
 	@Override

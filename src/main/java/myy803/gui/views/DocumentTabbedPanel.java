@@ -1,4 +1,4 @@
-package myy803.gui.containers;
+package myy803.gui.views;
 
 import java.awt.Component;
 import java.awt.GridBagConstraints;
@@ -16,6 +16,8 @@ import javax.swing.JTabbedPane;
 import myy803.DocumentManager;
 import myy803.gui.ExternalSwingUtils;
 import myy803.gui.MainFrame;
+import myy803.gui.controller.AddDocumentController;
+import myy803.gui.controller.AddDocumentControllerImpl;
 import myy803.model.Document;
 
 public class DocumentTabbedPanel extends JTabbedPane {
@@ -26,7 +28,9 @@ public class DocumentTabbedPanel extends JTabbedPane {
 		super();
 		setBorder(null);
 		setFont(MainFrame.MAIN_FONT);
-		addDocPanel = new AddDocumentPanel();
+		AddDocumentController controller = new AddDocumentControllerImpl();
+		addDocPanel = new AddDocumentPanel(controller);
+		controller.initialize();
 		addTab("+", addDocPanel);
 	}
 

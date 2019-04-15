@@ -16,7 +16,7 @@ import myy803.DocumentManager;
 import myy803.RecentFileManager;
 import myy803.commons.Files;
 import myy803.commons.Setting;
-import myy803.gui.containers.DocumentTabbedPanel;
+import myy803.gui.views.DocumentTabbedPanel;
 
 public class MainFrame extends JFrame {
 	private static final long serialVersionUID = 895370362316846430L;

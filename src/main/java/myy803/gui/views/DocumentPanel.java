@@ -1,4 +1,4 @@
-package myy803.gui.containers;
+package myy803.gui.views;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -34,6 +34,7 @@ import myy803.commons.Setting;
 import myy803.gui.Icon;
 import myy803.gui.MainFrame;
 import myy803.gui.SwingUtils;
+import myy803.gui.components.DocumentFileChooser;
 import myy803.model.Command;
 import myy803.model.Document;
 import myy803.model.DocumentType;
@@ -211,7 +212,7 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 	}
 
 	private void onLoad() {
-		MainFrame.getInstance().getTabbedPanel().getAddDocPanel().onLoad();
+		MainFrame.getInstance().getTabbedPanel().getAddDocPanel().getController().chooseAndLoadDocument();
 	}
 
 	private void onSaveAs() {

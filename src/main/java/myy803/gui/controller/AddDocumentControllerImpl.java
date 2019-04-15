@@ -1,0 +1,134 @@
+package myy803.gui.controller;
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.io.File;
+import java.io.IOException;
+
+import javax.swing.Box;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import myy803.DocumentManager;
+import myy803.RecentFileManager;
+import myy803.commons.Setting;
+import myy803.gui.MainFrame;
+import myy803.gui.components.DocumentFileChooser;
+import myy803.gui.views.AddDocumentView;
+import myy803.gui.views.RecentFilePanel;
+import myy803.model.Document;
+import myy803.model.DocumentType;
+
+public class AddDocumentControllerImpl implements AddDocumentController {
+	private AddDocumentView view;
+	private DocumentType selectedDocumentType;
+
+	public AddDocumentControllerImpl() {
+	}
+
+	@Override
+	public void chooseAndLoadDocument() {
+		DocumentFileChooser chooser = new DocumentFileChooser();
+		chooser.setDialogTitle("Load document");
+		if (chooser.showOpenDialog(view.get()) == JFileChooser.APPROVE_OPTION) {
+			File selectedFile = chooser.getSelectedFile();
+			File folder = selectedFile.getParentFile();
+			Setting.LAST_DIRECTORY_SAVED.update(folder.getAbsolutePath());
+			try {
+				Document doc = DocumentManager.INSTANCE.loadDocument(selectedFile);
+				// Check if this file is already opened
+				if (DocumentManager.INSTANCE.getDocuments().contains(doc)) {
+					MainFrame.getInstance().getTabbedPanel().openDocumentTab(doc);
+				} else {
+					DocumentManager.INSTANCE.getDocuments().add(doc);
+					MainFrame.getInstance().getTabbedPanel().createTabAndShowDocument(doc);
+				}
+				RecentFileManager.INSTANCE.push(doc);
+				fixRecentFiles();
+			} catch (ClassNotFoundException | IOException e) {
+				System.err.println("Error reading file " + selectedFile.getAbsolutePath());
+				e.printStackTrace();
+			}
+
+		}
+	}
+
+	public void fixRecentFiles() {
+		JPanel recentFilesPanel = view.getRecentFilesPanel();
+		recentFilesPanel.removeAll();
+		String[] recentFiles = RecentFileManager.INSTANCE.getFiles();
+		if (recentFiles.length > 0) {
+			for (int i = recentFiles.length - 1; i >= 0; i--) {
+				String recentFilePath = recentFiles[i];
+				RecentFilePanel rfp = new RecentFilePanel(this, recentFilePath);
+				JPanel borderLayout = new JPanel(new BorderLayout());
+				borderLayout.add(rfp, BorderLayout.PAGE_START);
+				Dimension dim2 = rfp.getPreferredSize();
+				dim2.width = 200;
+				rfp.setPreferredSize(dim2);
+				recentFilesPanel.add(borderLayout);
+				recentFilesPanel.add(Box.createRigidArea(new Dimension(1, 5)));
+			}
+		} else {
+			JLabel label = new JLabel("No files opened recently.");
+			label.setFont(MainFrame.MAIN_FONT);
+			label.setHorizontalAlignment(JLabel.CENTER);
+			recentFilesPanel.add(label);
+		}
+		recentFilesPanel.add(Box.createVerticalGlue());
+		recentFilesPanel.repaint();
+		recentFilesPanel.revalidate();
+	}
+
+	@Override
+	public void createDocument() {
+		Document doc = DocumentManager.INSTANCE.createDocument(selectedDocumentType);
+		DocumentManager.INSTANCE.getDocuments().add(doc);
+		MainFrame.getInstance().getTabbedPanel().createTabAndShowDocument(doc);
+	}
+
+	@Override
+	public void onChangeDocTypeSelection(DocumentType docType) {
+		this.selectedDocumentType = docType;
+		String preview = DocumentManager.INSTANCE.createDocument(selectedDocumentType).getContent();
+		view.getDocumentTextPanePanel().getTextPane().setText(preview);
+	}
+
+	@Override
+	public AddDocumentView getView() {
+		return view;
+	}
+
+	@Override
+	public void setView(AddDocumentView view) {
+		this.view = view;
+	}
+
+	@Override
+	public void initialize() {
+		fixRecentFiles();
+	}
+
+	@Override
+	public void loadDocument(String path) {
+		File selectedFile = new File(path);
+		try {
+			Document doc = DocumentManager.INSTANCE.loadDocument(selectedFile);
+			// Check if this file is already opened
+			if (DocumentManager.INSTANCE.getDocuments().contains(doc)) {
+				MainFrame.getInstance().getTabbedPanel().openDocumentTab(doc);
+			} else {
+				DocumentManager.INSTANCE.getDocuments().add(doc);
+				MainFrame.getInstance().getTabbedPanel().createTabAndShowDocument(doc);
+			}
+			RecentFileManager.INSTANCE.push(doc);
+			fixRecentFiles();
+		} catch (ClassNotFoundException | IOException e1) {
+			System.err.println("Error reading file " + selectedFile.getAbsolutePath());
+			e1.printStackTrace();
+		}
+
+	}
+
+}

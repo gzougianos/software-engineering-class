@@ -1,4 +1,4 @@
-package myy803.gui.containers;
+package myy803.gui.views;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
