@@ -11,15 +11,15 @@ import javax.swing.UIManager;
 
 import com.alee.laf.WebLookAndFeel;
 
-import myy803.TextCommandManager;
 import myy803.DocumentManager;
 import myy803.RecentFileManager;
+import myy803.TextCommandManager;
 import myy803.commons.Files;
 import myy803.commons.Setting;
 import myy803.gui.controller.TabController;
 import myy803.gui.controller.TabControllerImpl;
-import myy803.gui.views.TabbedView;
 import myy803.gui.views.TabbedPanel;
+import myy803.gui.views.TabbedView;
 
 public class MainFrame extends JFrame {
 	private static final long serialVersionUID = 895370362316846430L;
@@ -67,6 +67,7 @@ public class MainFrame extends JFrame {
 		DocumentManager.INSTANCE.hashCode(); //load document manager
 		TextCommandManager.INSTANCE.hashCode(); //load command manager
 		RecentFileManager.INSTANCE.hashCode(); //init recent file manager
+		KeywordManager.INSTANCE.hashCode(); //load keywords
 	}
 
 	/**

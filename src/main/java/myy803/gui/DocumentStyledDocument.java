@@ -3,11 +3,7 @@ package myy803.gui;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,8 +21,6 @@ import javax.swing.text.StyledEditorKit.FontSizeAction;
 
 public class DocumentStyledDocument extends DefaultStyledDocument {
 	private static final long serialVersionUID = 1L;
-	private static final String COLORED_KEYWORDS_FILE = "/myy803/resources/colored_keywords";
-	private static final HashSet<String> COLORED_KEYWORDS = new HashSet<>();
 	private JTextPane textPane;
 	private JTextArea linesTextArea;
 	private Style defaultStyle;
@@ -35,10 +29,6 @@ public class DocumentStyledDocument extends DefaultStyledDocument {
 	private HashMap<Integer, String> words = new HashMap<>();
 	private HashMap<Integer, String> properties = new HashMap<>();
 	private int fontSize;
-
-	static {
-		loadColoredKeywords();
-	}
 
 	public DocumentStyledDocument(JTextPane textPane, JTextArea linesTextArea) {
 		this.textPane = textPane;
@@ -138,7 +128,7 @@ public class DocumentStyledDocument extends DefaultStyledDocument {
 		words.clear();
 		properties.clear();
 		findWords(text);
-
+		findProperties(text);
 		setCharacterAttributes(0, text.length(), defaultStyle, true);
 		for (int position : properties.keySet()) {
 			String word = properties.get(position);
@@ -173,7 +163,7 @@ public class DocumentStyledDocument extends DefaultStyledDocument {
 			if (!isWordCharacter(ch)) {
 				lastWhitespacePosition = index;
 				if (word.length() > 0) {
-					if (isKeyword(word)) {
+					if (KeywordManager.INSTANCE.isKeyword(word)) {
 						int pos = lastWhitespacePosition - word.length();
 						words.put(pos, word);
 					}
@@ -183,28 +173,10 @@ public class DocumentStyledDocument extends DefaultStyledDocument {
 				word += ch;
 			}
 		}
-		//		word = "";
-		//		int pos = -1;
-		//		for (int index = 0; index < data.length; index++) {
-		//			char ch = data[index];
-		//			if (ch == '{' && word.isEmpty()) {
-		//				word = "{";
-		//				pos = index;
-		//			} else {
-		//				if (ch == '}' && !word.isEmpty()) {
-		//					word += "}";
-		//					System.out.println(pos);
-		//					if (pos != -1)
-		//						properties.put(pos, word);
-		//					word = "";
-		//					pos = -1;
-		//				} else if (!word.isEmpty()) {
-		//					word += String.valueOf(ch);
-		//				}
-		//
-		//			}
-		//		}
 
+	}
+
+	private void findProperties(String content) {
 		Matcher m = Pattern.compile("\\\\*.(\\{.*\\})").matcher(content);
 		while (m.find()) {
 			String group = m.group(1);
@@ -219,23 +191,4 @@ public class DocumentStyledDocument extends DefaultStyledDocument {
 		return Character.isLetter(c) || c == '\\';
 	}
 
-	private static final boolean isKeyword(String word) {
-		return COLORED_KEYWORDS.contains(word);
-	}
-
-	private static void loadColoredKeywords() {
-		try (InputStreamReader isr = new InputStreamReader(
-				DocumentStyledDocument.class.getResourceAsStream(COLORED_KEYWORDS_FILE));
-				BufferedReader br = new BufferedReader(isr)) {
-			String line;
-			while ((line = br.readLine()) != null) {
-				String trimed = line.trim();
-				if (!trimed.isEmpty())
-					COLORED_KEYWORDS.add(trimed);
-			}
-		} catch (IOException e) {
-			System.err.println("Error reading colored keywords file: " + COLORED_KEYWORDS_FILE);
-			e.printStackTrace();
-		}
-	}
 }
