@@ -39,10 +39,10 @@ public class AddDocumentControllerImpl implements AddDocumentController {
 				Document doc = DocumentManager.INSTANCE.loadDocument(selectedFile);
 				// Check if this file is already opened
 				if (DocumentManager.INSTANCE.getDocuments().contains(doc)) {
-					MainFrame.getInstance().getTabbedPanel().openDocumentTab(doc);
+					MainFrame.getInstance().getTabView().getController().openDocumentTab(doc);
 				} else {
 					DocumentManager.INSTANCE.getDocuments().add(doc);
-					MainFrame.getInstance().getTabbedPanel().createTabAndShowDocument(doc);
+					MainFrame.getInstance().getTabView().getController().createTabAndShowDocument(doc);
 				}
 				RecentFileManager.INSTANCE.push(doc);
 				fixRecentFiles();
@@ -85,11 +85,15 @@ public class AddDocumentControllerImpl implements AddDocumentController {
 	public void createDocument() {
 		Document doc = DocumentManager.INSTANCE.createDocument(selectedDocumentType);
 		DocumentManager.INSTANCE.getDocuments().add(doc);
-		MainFrame.getInstance().getTabbedPanel().createTabAndShowDocument(doc);
+		MainFrame.getInstance().getTabView().getController().createTabAndShowDocument(doc);
 	}
 
 	@Override
 	public void onChangeDocTypeSelection(DocumentType docType) {
+		view.getDocumentTypeLabels().forEach(l -> {
+			l.setChosen(docType == l.getDocumentType());
+			l.repaint();
+		});
 		this.selectedDocumentType = docType;
 		String preview = DocumentManager.INSTANCE.createDocument(selectedDocumentType).getContent();
 		view.getDocumentTextPanePanel().getTextPane().setText(preview);
@@ -108,6 +112,7 @@ public class AddDocumentControllerImpl implements AddDocumentController {
 	@Override
 	public void initialize() {
 		fixRecentFiles();
+		onChangeDocTypeSelection(DocumentType.ARTICLE); //first selection
 	}
 
 	@Override
@@ -117,10 +122,10 @@ public class AddDocumentControllerImpl implements AddDocumentController {
 			Document doc = DocumentManager.INSTANCE.loadDocument(selectedFile);
 			// Check if this file is already opened
 			if (DocumentManager.INSTANCE.getDocuments().contains(doc)) {
-				MainFrame.getInstance().getTabbedPanel().openDocumentTab(doc);
+				MainFrame.getInstance().getTabView().getController().openDocumentTab(doc);
 			} else {
 				DocumentManager.INSTANCE.getDocuments().add(doc);
-				MainFrame.getInstance().getTabbedPanel().createTabAndShowDocument(doc);
+				MainFrame.getInstance().getTabView().getController().createTabAndShowDocument(doc);
 			}
 			RecentFileManager.INSTANCE.push(doc);
 			fixRecentFiles();

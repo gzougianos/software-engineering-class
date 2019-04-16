@@ -16,6 +16,9 @@ import myy803.DocumentManager;
 import myy803.RecentFileManager;
 import myy803.commons.Files;
 import myy803.commons.Setting;
+import myy803.gui.controller.DocumentTabController;
+import myy803.gui.controller.DocumentTabControllerImpl;
+import myy803.gui.views.DocumentTabView;
 import myy803.gui.views.DocumentTabbedPanel;
 
 public class MainFrame extends JFrame {
@@ -25,7 +28,7 @@ public class MainFrame extends JFrame {
 	public static final Color GRAY = new Color(140, 140, 140);
 	public static final Font MAIN_FONT = new Font("Cambria", 0, 14);
 	private SplashScreen splashScreen;
-	private DocumentTabbedPanel tabbedPanel;
+	private DocumentTabView tabbedView;
 
 	public MainFrame() {
 		super(TITLE);
@@ -46,11 +49,16 @@ public class MainFrame extends JFrame {
 		fixLocationAndSize();
 		setIconImage(Icon.FAVICON.toImage());
 		getContentPane().setLayout(new BorderLayout());
-		getContentPane().add(tabbedPanel = new DocumentTabbedPanel());
+
+		DocumentTabController tabController = new DocumentTabControllerImpl();
+		tabbedView = new DocumentTabbedPanel(tabController);
+		tabController.setView(tabbedView);
+		tabController.initialize();
+		getContentPane().add(tabbedView.get());
 	}
 
-	public DocumentTabbedPanel getTabbedPanel() {
-		return tabbedPanel;
+	public DocumentTabView getTabView() {
+		return tabbedView;
 	}
 
 	private void loadData() {

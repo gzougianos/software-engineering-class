@@ -1,9 +1,12 @@
 package myy803.gui.views;
 
+import java.util.List;
+
 import javax.swing.JPanel;
 
-import myy803.gui.Controller;
 import myy803.gui.View;
+import myy803.gui.components.DocumentTypeLabel;
+import myy803.gui.controller.AddDocumentController;
 
 public interface AddDocumentView extends View<JPanel> {
 	JPanel getRecentFilesPanel();
@@ -11,5 +14,7 @@ public interface AddDocumentView extends View<JPanel> {
 	DocumentTextPanePanel getDocumentTextPanePanel();
 
 	@Override
-	Controller<AddDocumentView> getController();
+	AddDocumentController getController();
+
+	List<DocumentTypeLabel> getDocumentTypeLabels();
 }

@@ -1,6 +1,5 @@
 package myy803.gui.components;
 
-import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
@@ -8,7 +7,6 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import myy803.gui.Icon;
@@ -37,27 +35,9 @@ public class DocumentTypeLabel extends JLabel {
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				onMouseClick();
+				controller.onChangeDocTypeSelection(getDocumentType());
 			}
 		});
-	}
-
-	public void onMouseClick() {
-		if (isChosen()) //If it is already choosen
-			return;
-		Component parent = getParent();
-		if (parent instanceof JPanel) {
-			JPanel parentPanel = (JPanel) parent;
-			for (Component c : parentPanel.getComponents()) {
-				if (c instanceof DocumentTypeLabel) {
-					DocumentTypeLabel dl = (DocumentTypeLabel) c;
-					dl.setChosen(false);
-					dl.repaint();
-				}
-			}
-			setChosen(true);
-			controller.onChangeDocTypeSelection(getDocumentType());
-		}
 	}
 
 	@Override

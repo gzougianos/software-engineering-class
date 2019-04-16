@@ -212,7 +212,7 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 	}
 
 	private void onLoad() {
-		MainFrame.getInstance().getTabbedPanel().getAddDocPanel().getController().chooseAndLoadDocument();
+		MainFrame.getInstance().getTabView().getAddDocumentView().getController().chooseAndLoadDocument();
 	}
 
 	private void onSaveAs() {
@@ -309,6 +309,6 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 	private void changeDocumentSavedStateAndUpdateGui(boolean saved) {
 		getDocument().setSaved(saved);
 		saveButton.setEnabled(!getDocument().isSaved());
-		MainFrame.getInstance().getTabbedPanel().repaintLabels();
+		//		MainFrame.getInstance().getTabbedPanel().repaintLabels();
 	}
 }

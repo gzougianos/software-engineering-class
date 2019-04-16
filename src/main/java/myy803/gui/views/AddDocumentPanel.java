@@ -3,6 +3,7 @@ package myy803.gui.views;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -14,6 +15,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.alee.laf.scroll.WebScrollPane;
 
+import myy803.gui.ExternalSwingUtils;
 import myy803.gui.Icon;
 import myy803.gui.MainFrame;
 import myy803.gui.SwingUtils;
@@ -31,7 +33,6 @@ public class AddDocumentPanel extends JPanel implements AddDocumentView {
 	public AddDocumentPanel(AddDocumentController controller) {
 		super(new BorderLayout(25, 20));
 		this.controller = controller;
-		this.controller.setView(this);
 		setBorder(new EmptyBorder(10, 10, 10, 10));
 
 		JPanel inheritedPanel = new JPanel(new BorderLayout());
@@ -75,7 +76,6 @@ public class AddDocumentPanel extends JPanel implements AddDocumentView {
 
 		add(centeredPanel, BorderLayout.CENTER);
 		add(createFileOpenPanel(), BorderLayout.LINE_START);
-		((DocumentTypeLabel) documentTypesPanel.getComponents()[0]).onMouseClick();
 	}
 
 	private JPanel createFileOpenPanel() {
@@ -125,4 +125,10 @@ public class AddDocumentPanel extends JPanel implements AddDocumentView {
 	public AddDocumentController getController() {
 		return this.controller;
 	}
+
+	@Override
+	public List<DocumentTypeLabel> getDocumentTypeLabels() {
+		return ExternalSwingUtils.getDescendantsOfClass(DocumentTypeLabel.class, this);
+	}
+
 }

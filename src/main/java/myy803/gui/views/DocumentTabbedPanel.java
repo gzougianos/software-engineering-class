@@ -3,45 +3,30 @@ package myy803.gui.views;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
-import myy803.DocumentManager;
 import myy803.gui.ExternalSwingUtils;
 import myy803.gui.MainFrame;
-import myy803.gui.controller.AddDocumentController;
-import myy803.gui.controller.AddDocumentControllerImpl;
+import myy803.gui.controller.DocumentTabController;
 import myy803.model.Document;
 
-public class DocumentTabbedPanel extends JTabbedPane {
+public class DocumentTabbedPanel extends JTabbedPane implements DocumentTabView {
 	private static final long serialVersionUID = -7298563748251359603L;
-	private AddDocumentPanel addDocPanel;
+	private AddDocumentView addDocumentView;
+	private DocumentTabController controller;
 
-	public DocumentTabbedPanel() {
+	public DocumentTabbedPanel(DocumentTabController controller) {
 		super();
+		this.controller = controller;
 		setBorder(null);
 		setFont(MainFrame.MAIN_FONT);
-		AddDocumentController controller = new AddDocumentControllerImpl();
-		addDocPanel = new AddDocumentPanel(controller);
-		controller.initialize();
-		addTab("+", addDocPanel);
-	}
-
-	public void createTabAndShowDocument(Document doc) {
-		remove(addDocPanel);
-		DocumentPanel dp = new DocumentPanel(doc);
-		addTab(doc.getName(), dp);
-		int index = indexOfTab(doc.getName());
-		setTabComponentAt(index, new CloseTabComponent(doc));
-		addTab("+", addDocPanel);
-		setSelectedIndex(getTabCount() - 2);
 	}
 
 	public void openDocumentTab(Document doc) {
@@ -67,11 +52,7 @@ public class DocumentTabbedPanel extends JTabbedPane {
 		}
 	}
 
-	public AddDocumentPanel getAddDocPanel() {
-		return addDocPanel;
-	}
-
-	private static class CloseTabComponent extends JPanel implements ActionListener {
+	private class CloseTabComponent extends JPanel {
 		private static final long serialVersionUID = 4148815077976600552L;
 		private String name;
 		private JLabel titleLabel;
@@ -110,24 +91,34 @@ public class DocumentTabbedPanel extends JTabbedPane {
 			gbc.weightx = 0;
 			add(btnClose, gbc);
 
-			btnClose.addActionListener(this);
-
+			btnClose.addActionListener(e -> getController().closeDocumentTab(doc));
 		}
+	}
 
-		private int getIndex() {
-			return MainFrame.getInstance().getTabbedPanel().indexOfTab(this.name);
-		}
+	@Override
+	public DocumentTabController getController() {
+		return controller;
+	}
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			DocumentTabbedPanel dtp = MainFrame.getInstance().getTabbedPanel();
-			Component c = dtp.getComponentAt(getIndex());
-			if (c instanceof DocumentPanel) {
-				Document documentOfThisTab = ((DocumentPanel) c).getDocument();
-				DocumentManager.INSTANCE.getDocuments().remove(documentOfThisTab);
-				dtp.removeTabAt(getIndex());
-			}
-		}
+	@Override
+	public AddDocumentView getAddDocumentView() {
+		return addDocumentView;
+	}
+
+	@Override
+	public JComponent createCloseTabComponent(Document doc) {
+		return new CloseTabComponent(doc);
+	}
+
+	@Override
+	public void setAddDocumentView(AddDocumentView view) {
+		addDocumentView = view;
+
+	}
+
+	@Override
+	public DocumentTabbedPanel get() {
+		return this;
 	}
 
 }
