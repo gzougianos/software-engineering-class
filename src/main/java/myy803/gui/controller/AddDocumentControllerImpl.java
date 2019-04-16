@@ -23,8 +23,10 @@ import myy803.model.DocumentType;
 public class AddDocumentControllerImpl implements AddDocumentController {
 	private AddDocumentView view;
 	private DocumentType selectedDocumentType;
+	private DocumentTabController tabController;
 
 	public AddDocumentControllerImpl() {
+		tabController = MainFrame.getInstance().getTabView().getController();
 	}
 
 	@Override
@@ -39,10 +41,10 @@ public class AddDocumentControllerImpl implements AddDocumentController {
 				Document doc = DocumentManager.INSTANCE.loadDocument(selectedFile);
 				// Check if this file is already opened
 				if (DocumentManager.INSTANCE.getDocuments().contains(doc)) {
-					MainFrame.getInstance().getTabView().getController().openDocumentTab(doc);
+					tabController.openDocumentTab(doc);
 				} else {
 					DocumentManager.INSTANCE.getDocuments().add(doc);
-					MainFrame.getInstance().getTabView().getController().createTabAndShowDocument(doc);
+					tabController.createTabAndShowDocument(doc);
 				}
 				RecentFileManager.INSTANCE.push(doc);
 				fixRecentFiles();
@@ -85,7 +87,7 @@ public class AddDocumentControllerImpl implements AddDocumentController {
 	public void createDocument() {
 		Document doc = DocumentManager.INSTANCE.createDocument(selectedDocumentType);
 		DocumentManager.INSTANCE.getDocuments().add(doc);
-		MainFrame.getInstance().getTabView().getController().createTabAndShowDocument(doc);
+		tabController.createTabAndShowDocument(doc);
 	}
 
 	@Override
@@ -122,10 +124,10 @@ public class AddDocumentControllerImpl implements AddDocumentController {
 			Document doc = DocumentManager.INSTANCE.loadDocument(selectedFile);
 			// Check if this file is already opened
 			if (DocumentManager.INSTANCE.getDocuments().contains(doc)) {
-				MainFrame.getInstance().getTabView().getController().openDocumentTab(doc);
+				tabController.openDocumentTab(doc);
 			} else {
 				DocumentManager.INSTANCE.getDocuments().add(doc);
-				MainFrame.getInstance().getTabView().getController().createTabAndShowDocument(doc);
+				tabController.createTabAndShowDocument(doc);
 			}
 			RecentFileManager.INSTANCE.push(doc);
 			fixRecentFiles();

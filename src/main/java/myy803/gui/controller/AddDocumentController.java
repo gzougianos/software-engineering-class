@@ -6,9 +6,6 @@ import myy803.model.DocumentType;
 
 public interface AddDocumentController extends Controller<AddDocumentView> {
 
-	@Override
-	void initialize();
-
 	void chooseAndLoadDocument();
 
 	void loadDocument(String path);
@@ -17,9 +14,4 @@ public interface AddDocumentController extends Controller<AddDocumentView> {
 
 	void onChangeDocTypeSelection(DocumentType docType);
 
-	@Override
-	AddDocumentView getView();
-
-	@Override
-	void setView(AddDocumentView view);
 }
