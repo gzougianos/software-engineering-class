@@ -1,45 +1,36 @@
 package myy803.gui.views;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.IOException;
 
 import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.SimpleAttributeSet;
 
 import com.alee.laf.scroll.WebScrollPane;
 import com.alee.laf.toolbar.WebToolBar;
 
 import myy803.CommandManager;
-import myy803.DocumentManager;
-import myy803.commons.Setting;
 import myy803.gui.Icon;
 import myy803.gui.MainFrame;
 import myy803.gui.SwingUtils;
-import myy803.gui.components.DocumentFileChooser;
-import myy803.model.Command;
+import myy803.gui.controller.DocumentController;
 import myy803.model.Document;
 import myy803.model.DocumentType;
 
-public class DocumentPanel extends JPanel implements DocumentListener {
+public class DocumentPanel extends JPanel implements DocumentListener, DocumentView {
 	private static final long serialVersionUID = -1467388562407975227L;
 	private static final int ICON_DIMENSION = 20;
 	private static final String LEFT_ARROW = "\u2190";
@@ -57,9 +48,11 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 	private JButton loadButton;
 	private JTextField copyrightField;
 	private JLabel authorLabel, lastModifiedDateField;
+	private DocumentController controller;
 
-	public DocumentPanel(Document document) {
+	public DocumentPanel(DocumentController controller, Document document) {
 		super(new BorderLayout());
+		this.controller = controller;
 		this.document = document;
 		initToolbar();
 		initFontSlider();
@@ -163,23 +156,23 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 		loadButton = new JButton(Icon.LOAD.toImageIcon(ICON_DIMENSION));
 		loadButton.setFont(MainFrame.MAIN_FONT);
 		loadButton.setToolTipText(SwingUtils.toHTML("Load file"));
-		loadButton.addActionListener(e -> onLoad());
+		loadButton.addActionListener(e -> controller.load());
 
 		saveButton = new JButton(Icon.SAVE.toImageIcon(ICON_DIMENSION));
 		saveButton.setFont(MainFrame.MAIN_FONT);
 		saveButton.setToolTipText(SwingUtils.toHTML("Save file"));
-		saveButton.addActionListener(e -> onSave());
+		saveButton.addActionListener(e -> controller.save());
 		saveButton.setEnabled(!getDocument().isSaved());
 
 		saveAsButton = new JButton(Icon.SAVE_AS.toImageIcon(ICON_DIMENSION));
 		saveAsButton.setFont(MainFrame.MAIN_FONT);
 		saveAsButton.setToolTipText(SwingUtils.toHTML("Save file as..."));
-		saveAsButton.addActionListener(e -> onSaveAs());
+		saveAsButton.addActionListener(e -> controller.saveAs());
 
 		commandsButton = new JButton(Icon.COMMAND.toImageIcon(ICON_DIMENSION));
 		commandsButton.setFont(MainFrame.MAIN_FONT);
 		commandsButton.setToolTipText(SwingUtils.toHTML("This document type does not allow commands."));
-		commandsButton.addActionListener(e -> openCommandsDialog());
+		commandsButton.addActionListener(e -> controller.openCommandSelection());
 		commandsButton.setEnabled(docTypeAllowsCommands());
 		if (commandsButton.isEnabled())
 			commandsButton.setToolTipText(SwingUtils.toHTML("Add command..."));
@@ -187,76 +180,6 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 
 	private boolean docTypeAllowsCommands() {
 		return CommandManager.INSTANCE.getCommands().stream().anyMatch(c -> c.allowsType(document.getDocumentType()));
-	}
-
-	private void openCommandsDialog() {
-		CommandsPanel panel = new CommandsPanel(document.getDocumentType());
-		panel.setPreferredSize(new Dimension(500, 500));
-		if (SwingUtils.createDoubleOptionPanel(panel, "Add command", Icon.COMMAND, "Add", "Cancel")) {
-			Command selectedCommand = panel.getSelectedCommand();
-			int cursorIndex = documentTextPanePanel.getTextPane().getCaretPosition();
-			try {
-				documentTextPanePanel.getTextPane().getDocument().insertString(cursorIndex, selectedCommand.getContent(),
-						new SimpleAttributeSet());
-				if (selectedCommand.hasCursor()) {
-					documentTextPanePanel.getTextPane().requestFocusInWindow();
-					SwingUtilities.invokeLater(() -> {
-						int totalCursor = cursorIndex + selectedCommand.getCursorIndex();
-						documentTextPanePanel.getTextPane().setCaretPosition(totalCursor);
-					});
-				}
-			} catch (BadLocationException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	private void onLoad() {
-		MainFrame.getInstance().getTabView().getAddDocumentView().getController().chooseAndLoadDocument();
-	}
-
-	private void onSaveAs() {
-		DocumentFileChooser chooser = new DocumentFileChooser(getDocument());
-		chooser.setDialogTitle("Save document");
-		if (chooser.showSaveDialog(DocumentPanel.this) == JFileChooser.APPROVE_OPTION) {
-			File selectedFile = chooser.getSelectedFile();
-			if (!selectedFile.getName().endsWith(Document.FILE_EXTENSION))
-				selectedFile = new File(selectedFile.getAbsolutePath() + Document.FILE_EXTENSION);
-			Setting.LAST_DIRECTORY_SAVED.update(selectedFile.getParentFile().getAbsolutePath());
-			document.setPath(selectedFile);
-			parseValues();
-			saveDoc();
-			changeDocumentSavedStateAndUpdateGui(true);
-			lastModifiedDateField.setText("Last Modified Date: " + SwingUtils.formatDate(document.getLastModifiedDate()));
-		}
-	}
-
-	private void onSave() {
-		if (!document.getPath().exists()) {
-			onSaveAs();
-			return;
-		}
-		parseValues();
-		saveDoc();
-		changeDocumentSavedStateAndUpdateGui(true);
-		lastModifiedDateField.setText("Last Modified Date: " + SwingUtils.formatDate(document.getLastModifiedDate()));
-	}
-
-	private void parseValues() {
-		document.setLastModifiedDate(System.currentTimeMillis());
-		document.setContent(documentTextPanePanel.getTextPane().getText());
-		document.setCopyright(copyrightField.getText());
-	}
-
-	private void saveDoc() {
-		try {
-			changeDocumentSavedStateAndUpdateGui(true);
-			DocumentManager.INSTANCE.saveDocument(document);
-		} catch (IOException e1) {
-			System.err.println("Error saving as document in " + document.getPath().getAbsolutePath());
-			e1.printStackTrace();
-		}
-
 	}
 
 	private void initFontSlider() {
@@ -272,43 +195,59 @@ public class DocumentPanel extends JPanel implements DocumentListener {
 
 	}
 
+	@Override
 	public Document getDocument() {
 		return document;
 	}
 
 	@Override
 	public void insertUpdate(DocumentEvent e) {
-		changeDocumentSavedStateAndUpdateGui(false);
-		updateAuthor(e);
+		controller.textPaneChanged(e);
 	}
 
 	@Override
 	public void removeUpdate(DocumentEvent e) {
-		changeDocumentSavedStateAndUpdateGui(false);
-		updateAuthor(e);
+		controller.textPaneChanged(e);
 	}
 
 	@Override
 	public void changedUpdate(DocumentEvent e) {
 	}
 
-	private void updateAuthor(DocumentEvent e) {
-		Document clone = document.clone();
-		clone.setContent(documentTextPanePanel.getTextPane().getText());
-		int authorCommandOffset = clone.getContent().indexOf("\\author{");
-		int authorCommandEndOffset = clone.getContent().indexOf("}", authorCommandOffset);
-		if (e.getOffset() >= authorCommandOffset && e.getOffset() <= authorCommandEndOffset) {
-			String author = clone.getAuthor();
-			if (author.length() > 35)
-				authorLabel.setText("Author: " + clone.getAuthor().substring(0, 35) + "...");
-			else
-				authorLabel.setText("Author: " + clone.getAuthor());
-		}
+	@Override
+	public DocumentPanel get() {
+		return this;
 	}
 
-	private void changeDocumentSavedStateAndUpdateGui(boolean saved) {
-		getDocument().setSaved(saved);
-		saveButton.setEnabled(!getDocument().isSaved());
-		//		MainFrame.getInstance().getTabbedPanel().repaintLabels();
+	@Override
+	public DocumentController getController() {
+		return this.controller;
 	}
+
+	@Override
+	public void setLastModifiedDate(long date) {
+		String lastDate = SwingUtils.formatDate(date);
+		lastModifiedDateField.setText("Last Modified Date: " + lastDate);
+	}
+
+	@Override
+	public JButton getSaveButton() {
+		return saveButton;
+	}
+
+	@Override
+	public String getCopyrights() {
+		return copyrightField.getText();
+	}
+
+	@Override
+	public void setAuthor(String author) {
+		authorLabel.setText(author);
+	}
+
+	@Override
+	public JTextPane getTextPane() {
+		return documentTextPanePanel.getTextPane();
+	}
+
 }

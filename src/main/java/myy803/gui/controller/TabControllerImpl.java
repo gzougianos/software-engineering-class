@@ -41,7 +41,10 @@ public class TabControllerImpl implements TabController {
 	public void createTabAndShowDocument(Document doc) {
 		JTabbedPane tabbedPane = view.get();
 		tabbedPane.remove(view.getAddDocumentView().get());
-		DocumentPanel dp = new DocumentPanel(doc);
+		DocumentController controller = new DocumentControllerImpl();
+		DocumentPanel dp = new DocumentPanel(controller, doc);
+		controller.setView(dp);
+		controller.initialize();
 		tabbedPane.addTab(doc.getName(), dp);
 		int index = tabbedPane.indexOfTab(doc.getName());
 		tabbedPane.setTabComponentAt(index, view.createCloseTabComponent(doc));
