@@ -1,10 +1,13 @@
 package myy803.gui.controller;
 
 import java.awt.Component;
+import java.util.List;
 
 import javax.swing.JTabbedPane;
 
 import myy803.DocumentManager;
+import myy803.gui.ExternalSwingUtils;
+import myy803.gui.components.CloseTabComponent;
 import myy803.gui.views.AddDocumentPanel;
 import myy803.gui.views.AddDocumentView;
 import myy803.gui.views.DocumentPanel;
@@ -55,9 +58,11 @@ public class TabControllerImpl implements TabController {
 	@Override
 	public void closeDocumentTab(Document doc) {
 		JTabbedPane tabbedPane = view.get();
-		int index = tabbedPane.indexOfTab(doc.getName());
+		int index = indexOfTab();
+		if (index == -1)
+			return;
 		Component c = tabbedPane.getComponentAt(index);
-		if (c instanceof DocumentPanel && index != -1) {
+		if (c instanceof DocumentPanel) {
 			DocumentManager.INSTANCE.getDocuments().remove(doc);
 			tabbedPane.removeTabAt(index);
 		}
@@ -66,8 +71,22 @@ public class TabControllerImpl implements TabController {
 	@Override
 	public void openDocumentTab(Document doc) {
 		JTabbedPane tabbedPane = view.get();
-		int index = tabbedPane.indexOfTab(doc.getName());
+		int index = indexOfTab();
+		if (index == -1)
+			return;
 		tabbedPane.setSelectedIndex(index);
 	}
 
+	private int indexOfTab() {
+		JTabbedPane tabbedPane = view.get();
+		List<CloseTabComponent> closeTabComps = ExternalSwingUtils.getDescendantsOfClass(CloseTabComponent.class, tabbedPane);
+		for (CloseTabComponent closeTabComp : closeTabComps) {
+			for (int i = 0; i < tabbedPane.getTabCount(); i++) {
+				Component c = tabbedPane.getTabComponentAt(i);
+				if (c == closeTabComp)
+					return i;
+			}
+		}
+		return -1;
+	}
 }

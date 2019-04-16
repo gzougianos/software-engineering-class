@@ -1,20 +1,14 @@
 package myy803.gui.controller;
 
 import java.awt.Dimension;
-import java.io.File;
-import java.io.IOException;
 
-import javax.swing.JFileChooser;
 import javax.swing.JTextPane;
 import javax.swing.event.DocumentEvent;
 
 import myy803.CommandFactory;
-import myy803.DocumentManager;
-import myy803.commons.Setting;
 import myy803.gui.Icon;
 import myy803.gui.MainFrame;
 import myy803.gui.SwingUtils;
-import myy803.gui.components.DocumentFileChooser;
 import myy803.gui.views.AddDocumentView;
 import myy803.gui.views.CommandsPanel;
 import myy803.gui.views.DocumentView;
@@ -46,58 +40,25 @@ public class DocumentControllerImpl implements DocumentController {
 
 	@Override
 	public void save() {
-		if (!view.getDocument().getPath().exists()) {
-			saveAs();
-		} else {
-			updateDocValues();
-			saveDoc();
-			changeDocSavedStateAndUpdateGUI(true);
-			view.setLastModifiedDate(view.getDocument().getLastModifiedDate());
-		}
+		CommandFactory.createSaveCommand(view).execute();
+		changeDocSavedStateAndUpdateGUI(true);
 	}
 
 	@Override
 	public void saveAs() {
-		DocumentFileChooser chooser = new DocumentFileChooser(view.getDocument());
-		chooser.setDialogTitle("Save document");
-		if (chooser.showSaveDialog(view.get()) == JFileChooser.APPROVE_OPTION) {
-			File selectedFile = chooser.getSelectedFile();
-			if (!selectedFile.getName().endsWith(Document.FILE_EXTENSION))
-				selectedFile = new File(selectedFile.getAbsolutePath() + Document.FILE_EXTENSION);
-			Setting.LAST_DIRECTORY_SAVED.update(selectedFile.getParentFile().getAbsolutePath());
-			view.getDocument().setPath(selectedFile);
-			updateDocValues();
-			saveDoc();
-			changeDocSavedStateAndUpdateGUI(true);
-			view.setLastModifiedDate(view.getDocument().getLastModifiedDate());
-		}
+		CommandFactory.createSaveAsCommand(view).execute();
+		changeDocSavedStateAndUpdateGUI(true);
 	}
 
-	private void updateDocValues() {
-		Document doc = view.getDocument();
-		doc.setLastModifiedDate(System.currentTimeMillis());
-		doc.setContent(view.getTextPane().getText());
-		doc.setCopyright(view.getCopyrights());
-	}
-
-	private void saveDoc() {
-		try {
-			DocumentManager.INSTANCE.saveDocument(view.getDocument());
-		} catch (IOException e1) {
-			System.err.println("Error saving as document in " + view.getDocument().getPath().getAbsolutePath());
-			e1.printStackTrace();
-		}
+	@Override
+	public void load() {
+		addDocView.getController().chooseAndLoadDocument();
 	}
 
 	private void changeDocSavedStateAndUpdateGUI(boolean saved) {
 		view.getDocument().setSaved(saved);
 		view.getSaveButton().setEnabled(!view.getDocument().isSaved());
 		addDocView.getDocumentTypeLabels().forEach(l -> l.repaint());
-	}
-
-	@Override
-	public void load() {
-		addDocView.getController().chooseAndLoadDocument();
 	}
 
 	@Override
