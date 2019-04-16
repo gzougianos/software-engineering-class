@@ -1,5 +1,6 @@
 package myy803.gui;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
@@ -124,8 +125,7 @@ public class DocumentStyledDocument extends DefaultStyledDocument {
 		StyleConstants.setFontFamily(keywordStyle, MainFrame.MAIN_FONT.getFontName());
 		StyleConstants.setFontSize(keywordStyle, fontSize);
 
-		//		StyleConstants.setForeground(propertiesStyle, new Color(200, 224, 98));
-		StyleConstants.setItalic(propertiesStyle, true);
+		StyleConstants.setForeground(propertiesStyle, new Color(126, 54, 54));
 		StyleConstants.setFontFamily(propertiesStyle, MainFrame.MAIN_FONT.getFontName());
 		StyleConstants.setFontSize(propertiesStyle, fontSize);
 
