@@ -8,17 +8,17 @@ import myy803.DocumentManager;
 import myy803.gui.views.AddDocumentPanel;
 import myy803.gui.views.AddDocumentView;
 import myy803.gui.views.DocumentPanel;
-import myy803.gui.views.DocumentTabView;
+import myy803.gui.views.TabbedView;
 import myy803.model.Document;
 
-public class DocumentTabControllerImpl implements DocumentTabController {
-	private DocumentTabView view;
+public class TabControllerImpl implements TabController {
+	private TabbedView view;
 
-	public DocumentTabControllerImpl() {
+	public TabControllerImpl() {
 	}
 
 	@Override
-	public DocumentTabView getView() {
+	public TabbedView getView() {
 		return view;
 	}
 
@@ -33,7 +33,7 @@ public class DocumentTabControllerImpl implements DocumentTabController {
 	}
 
 	@Override
-	public void setView(DocumentTabView view) {
+	public void setView(TabbedView view) {
 		this.view = view;
 	}
 

@@ -23,7 +23,7 @@ import myy803.model.DocumentType;
 public class AddDocumentControllerImpl implements AddDocumentController {
 	private AddDocumentView view;
 	private DocumentType selectedDocumentType;
-	private DocumentTabController tabController;
+	private TabController tabController;
 
 	public AddDocumentControllerImpl() {
 		tabController = MainFrame.getInstance().getTabView().getController();

@@ -3,10 +3,10 @@ package myy803.gui.views;
 import javax.swing.JComponent;
 
 import myy803.gui.View;
-import myy803.gui.controller.DocumentTabController;
+import myy803.gui.controller.TabController;
 import myy803.model.Document;
 
-public interface DocumentTabView extends View<DocumentTabbedPanel> {
+public interface TabbedView extends View<TabbedPanel> {
 	AddDocumentView getAddDocumentView();
 
 	void setAddDocumentView(AddDocumentView view);
@@ -14,5 +14,5 @@ public interface DocumentTabView extends View<DocumentTabbedPanel> {
 	JComponent createCloseTabComponent(Document doc);
 
 	@Override
-	DocumentTabController getController();
+	TabController getController();
 }

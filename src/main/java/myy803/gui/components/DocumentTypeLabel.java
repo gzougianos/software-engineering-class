@@ -19,11 +19,9 @@ public class DocumentTypeLabel extends JLabel {
 	private static final int ICON_DIMENSION = 120;
 	private DocumentType documentType;
 	private boolean chosen;
-	private AddDocumentController controller;
 
 	public DocumentTypeLabel(AddDocumentController controller, DocumentType documentType) {
 		super(documentType.getName());
-		this.controller = controller;
 		setFont(MainFrame.MAIN_FONT);
 		Image img = documentType.getIcon().getImage().getScaledInstance(ICON_DIMENSION, ICON_DIMENSION, Image.SCALE_SMOOTH);
 		setIcon(new ImageIcon(img));

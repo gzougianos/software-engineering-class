@@ -14,15 +14,15 @@ import javax.swing.JTabbedPane;
 
 import myy803.gui.ExternalSwingUtils;
 import myy803.gui.MainFrame;
-import myy803.gui.controller.DocumentTabController;
+import myy803.gui.controller.TabController;
 import myy803.model.Document;
 
-public class DocumentTabbedPanel extends JTabbedPane implements DocumentTabView {
+public class TabbedPanel extends JTabbedPane implements TabbedView {
 	private static final long serialVersionUID = -7298563748251359603L;
 	private AddDocumentView addDocumentView;
-	private DocumentTabController controller;
+	private TabController controller;
 
-	public DocumentTabbedPanel(DocumentTabController controller) {
+	public TabbedPanel(TabController controller) {
 		super();
 		this.controller = controller;
 		setBorder(null);
@@ -96,7 +96,7 @@ public class DocumentTabbedPanel extends JTabbedPane implements DocumentTabView 
 	}
 
 	@Override
-	public DocumentTabController getController() {
+	public TabController getController() {
 		return controller;
 	}
 
@@ -117,7 +117,7 @@ public class DocumentTabbedPanel extends JTabbedPane implements DocumentTabView 
 	}
 
 	@Override
-	public DocumentTabbedPanel get() {
+	public TabbedPanel get() {
 		return this;
 	}
 
