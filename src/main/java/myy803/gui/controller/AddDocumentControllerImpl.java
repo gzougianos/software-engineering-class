@@ -6,15 +6,13 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.swing.Box;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import myy803.CommandFactory;
 import myy803.DocumentManager;
 import myy803.RecentFileManager;
-import myy803.commons.Setting;
 import myy803.gui.MainFrame;
-import myy803.gui.components.DocumentFileChooser;
 import myy803.gui.views.AddDocumentView;
 import myy803.gui.views.RecentFilePanel;
 import myy803.model.Document;
@@ -31,32 +29,11 @@ public class AddDocumentControllerImpl implements AddDocumentController {
 
 	@Override
 	public void chooseAndLoadDocument() {
-		DocumentFileChooser chooser = new DocumentFileChooser();
-		chooser.setDialogTitle("Load document");
-		if (chooser.showOpenDialog(view.get()) == JFileChooser.APPROVE_OPTION) {
-			File selectedFile = chooser.getSelectedFile();
-			File folder = selectedFile.getParentFile();
-			Setting.LAST_DIRECTORY_SAVED.update(folder.getAbsolutePath());
-			try {
-				Document doc = DocumentManager.INSTANCE.loadDocument(selectedFile);
-				// Check if this file is already opened
-				if (DocumentManager.INSTANCE.getDocuments().contains(doc)) {
-					tabController.openDocumentTab(doc);
-				} else {
-					DocumentManager.INSTANCE.getDocuments().add(doc);
-					tabController.createTabAndShowDocument(doc);
-				}
-				RecentFileManager.INSTANCE.push(doc);
-				fixRecentFiles();
-			} catch (ClassNotFoundException | IOException e) {
-				System.err.println("Error reading file " + selectedFile.getAbsolutePath());
-				e.printStackTrace();
-			}
-
-		}
+		CommandFactory.createLoadCommand(tabController).execute();
+		fixRecentFiles();
 	}
 
-	public void fixRecentFiles() {
+	private void fixRecentFiles() {
 		JPanel recentFilesPanel = view.getRecentFilesPanel();
 		recentFilesPanel.removeAll();
 		String[] recentFiles = RecentFileManager.INSTANCE.getFiles();

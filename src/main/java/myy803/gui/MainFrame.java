@@ -11,7 +11,7 @@ import javax.swing.UIManager;
 
 import com.alee.laf.WebLookAndFeel;
 
-import myy803.CommandManager;
+import myy803.TextCommandManager;
 import myy803.DocumentManager;
 import myy803.RecentFileManager;
 import myy803.commons.Files;
@@ -65,7 +65,7 @@ public class MainFrame extends JFrame {
 		Files.initialize();
 		Setting.initialize();
 		DocumentManager.INSTANCE.hashCode(); //load document manager
-		CommandManager.INSTANCE.hashCode(); //load command manager
+		TextCommandManager.INSTANCE.hashCode(); //load command manager
 		RecentFileManager.INSTANCE.hashCode(); //init recent file manager
 	}
 

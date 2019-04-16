@@ -22,7 +22,7 @@ import javax.swing.event.DocumentListener;
 import com.alee.laf.scroll.WebScrollPane;
 import com.alee.laf.toolbar.WebToolBar;
 
-import myy803.CommandManager;
+import myy803.TextCommandManager;
 import myy803.gui.Icon;
 import myy803.gui.MainFrame;
 import myy803.gui.SwingUtils;
@@ -179,7 +179,7 @@ public class DocumentPanel extends JPanel implements DocumentListener, DocumentV
 	}
 
 	private boolean docTypeAllowsCommands() {
-		return CommandManager.INSTANCE.getCommands().stream().anyMatch(c -> c.allowsType(document.getDocumentType()));
+		return TextCommandManager.INSTANCE.getCommands().stream().anyMatch(c -> c.allowsType(document.getDocumentType()));
 	}
 
 	private void initFontSlider() {

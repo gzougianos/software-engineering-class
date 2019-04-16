@@ -6,11 +6,9 @@ import java.io.IOException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JTextPane;
-import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.SimpleAttributeSet;
 
+import myy803.CommandFactory;
 import myy803.DocumentManager;
 import myy803.commons.Setting;
 import myy803.gui.Icon;
@@ -20,8 +18,8 @@ import myy803.gui.components.DocumentFileChooser;
 import myy803.gui.views.AddDocumentView;
 import myy803.gui.views.CommandsPanel;
 import myy803.gui.views.DocumentView;
-import myy803.model.Command;
 import myy803.model.Document;
+import myy803.model.TextCommand;
 
 public class DocumentControllerImpl implements DocumentController {
 	private DocumentView view;
@@ -111,23 +109,11 @@ public class DocumentControllerImpl implements DocumentController {
 	@Override
 	public void openCommandSelection() {
 		CommandsPanel panel = new CommandsPanel(view.getDocument().getDocumentType());
-		JTextPane textPane = view.getTextPane();
 		panel.setPreferredSize(new Dimension(500, 500));
 		if (SwingUtils.createDoubleOptionPanel(panel, "Add command", Icon.COMMAND, "Add", "Cancel")) {
-			Command selectedCommand = panel.getSelectedCommand();
-			int cursorIndex = textPane.getCaretPosition();
-			try {
-				textPane.getDocument().insertString(cursorIndex, selectedCommand.getContent(), new SimpleAttributeSet());
-				if (selectedCommand.hasCursor()) {
-					textPane.requestFocusInWindow();
-					SwingUtilities.invokeLater(() -> {
-						int totalCursor = cursorIndex + selectedCommand.getCursorIndex();
-						textPane.setCaretPosition(totalCursor);
-					});
-				}
-			} catch (BadLocationException e) {
-				e.printStackTrace();
-			}
+			TextCommand selectedCommand = panel.getSelectedCommand();
+			JTextPane textPane = view.getTextPane();
+			CommandFactory.createTextCommand(selectedCommand, textPane).execute();
 		}
 	}
 

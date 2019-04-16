@@ -17,15 +17,15 @@ import javax.swing.event.ListSelectionListener;
 
 import com.alee.laf.scroll.WebScrollPane;
 
-import myy803.CommandManager;
+import myy803.TextCommandManager;
 import myy803.gui.MainFrame;
 import myy803.gui.SwingUtils;
-import myy803.model.Command;
+import myy803.model.TextCommand;
 import myy803.model.DocumentType;
 
 public class CommandsPanel extends JPanel implements ListSelectionListener {
 	private static final long serialVersionUID = 5301578078614783234L;
-	private Command selectedCommand;
+	private TextCommand selectedCommand;
 	private DocumentType documentType;
 	private CommandsList list;
 	private JLabel descriptionLabel;
@@ -112,19 +112,19 @@ public class CommandsPanel extends JPanel implements ListSelectionListener {
 		commandContentPanel.getTextPane().setText(selectedCommand.getContent());
 	}
 
-	public Command getSelectedCommand() {
+	public TextCommand getSelectedCommand() {
 		return selectedCommand;
 	}
 
-	private final class CommandsList extends JList<Command> {
+	private final class CommandsList extends JList<TextCommand> {
 		private static final long serialVersionUID = 4189964359687859885L;
-		private DefaultListModel<Command> model;
+		private DefaultListModel<TextCommand> model;
 
 		public CommandsList() {
 			super();
 			setOpaque(false);
 			model = new DefaultListModel<>();
-			for (Command c : CommandManager.INSTANCE.getCommands()) {
+			for (TextCommand c : TextCommandManager.INSTANCE.getCommands()) {
 				if (c.allowsType(documentType)) {
 					model.addElement(c);
 				}
@@ -138,8 +138,8 @@ public class CommandsPanel extends JPanel implements ListSelectionListener {
 						boolean cellHasFocus) {
 					JLabel lab = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 					lab.setFont(MainFrame.MAIN_FONT);
-					if (value instanceof Command) {
-						Command c = (Command) value;
+					if (value instanceof TextCommand) {
+						TextCommand c = (TextCommand) value;
 						lab.setText(c.toString());
 					}
 					return lab;

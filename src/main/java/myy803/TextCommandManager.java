@@ -15,31 +15,31 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import myy803.model.Command;
+import myy803.model.TextCommand;
 
-public enum CommandManager {
+public enum TextCommandManager {
 	INSTANCE;
 	private static final String COMMANDS_FILE = "/myy803/resources/commands.xml";
 	private static final String CURSOR_INDEX_TAG = "%cursor%";
-	private List<Command> commands;
+	private List<TextCommand> commands;
 
-	private CommandManager() {
+	private TextCommandManager() {
 		loadCommands();
 	}
 
 	private void loadCommands() {
-		List<Command> commandList = new ArrayList<Command>();
+		List<TextCommand> commandList = new ArrayList<TextCommand>();
 		try {
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Document doc = dBuilder.parse(CommandManager.class.getResourceAsStream(COMMANDS_FILE));
+			Document doc = dBuilder.parse(TextCommandManager.class.getResourceAsStream(COMMANDS_FILE));
 			doc.getDocumentElement().normalize();
 			NodeList nList = doc.getElementsByTagName("command");
 			for (int temp = 0; temp < nList.getLength(); temp++) {
 				Node nNode = nList.item(temp);
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 					Element eElement = (Element) nNode;
-					Command c = buildCommandFromElement(eElement);
+					TextCommand c = buildCommandFromElement(eElement);
 					commandList.add(c);
 				}
 			}
@@ -50,7 +50,7 @@ public enum CommandManager {
 		commands = Collections.unmodifiableList(commandList);
 	}
 
-	private Command buildCommandFromElement(Element element) {
+	private TextCommand buildCommandFromElement(Element element) {
 		String name = element.getAttribute("name");
 		String content = getTagValue(element, "content").replaceAll("\t", "").replaceAll("\\\\n", System.lineSeparator());
 		String description = getTagValue(element, "description");
@@ -58,7 +58,7 @@ public enum CommandManager {
 		String disallowedDocuments = getTagValue(element, "disallowed_documents");
 		int cursorIndex = content.indexOf(CURSOR_INDEX_TAG);
 		content = content.replaceAll(CURSOR_INDEX_TAG, "");
-		return new Command(name, content, description, allowedDocuments, disallowedDocuments, cursorIndex);
+		return new TextCommand(name, content, description, allowedDocuments, disallowedDocuments, cursorIndex);
 	}
 
 	private String getTagValue(Element element, String tag) {
@@ -71,7 +71,7 @@ public enum CommandManager {
 		return "";
 	}
 
-	public List<Command> getCommands() {
+	public List<TextCommand> getCommands() {
 		return commands;
 	}
 }

@@ -6,16 +6,16 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import myy803.CommandManager;
-import myy803.model.Command;
+import myy803.TextCommandManager;
+import myy803.model.TextCommand;
 import myy803.model.DocumentType;
 
 public class OtherTests {
-	private static final CommandManager CM = CommandManager.INSTANCE;
+	private static final TextCommandManager CM = TextCommandManager.INSTANCE;
 
 	@Test
 	public void commandAllowedDisallowedTypes() {
-		Command c = CM.getCommands().get(0);
+		TextCommand c = CM.getCommands().get(0);
 		c.setDisallowedTypes("LETTER, ARTICLE");
 		assertFalse(c.allowsType(DocumentType.LETTER));
 		c.setAllowedTypes("LETTER, ARTICLE");

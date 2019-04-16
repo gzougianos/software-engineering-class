@@ -1,6 +1,6 @@
 package myy803.model;
 
-public class Command {
+public class TextCommand {
 	private String name;
 	private String content;
 	private String description;
@@ -8,11 +8,11 @@ public class Command {
 	private String disallowedTypes;
 	private int cursorIndex;
 
-	public Command() {
+	public TextCommand() {
 		this("", "", "", "", "", -1);
 	}
 
-	public Command(String name, String content, String description, String allowedTypes, String disallowedTypes,
+	public TextCommand(String name, String content, String description, String allowedTypes, String disallowedTypes,
 			int cursorIndex) {
 		super();
 		this.name = name;
