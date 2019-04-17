@@ -7,7 +7,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 public enum DocumentType {
-	ARTICLE, BOOK, LETTER, REPORT;
+	EMPTY, ARTICLE, BOOK, LETTER, REPORT;
 	private static final String ICON_PACKAGE = "/myy803/resources/icons/documents/";
 
 	public String getName() {
