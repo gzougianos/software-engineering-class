@@ -1,4 +1,4 @@
-package myy803.gui.views;
+package myy803.gui.view;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;

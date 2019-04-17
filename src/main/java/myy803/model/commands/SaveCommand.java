@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import myy803.CommandFactory;
 import myy803.DocumentManager;
-import myy803.gui.views.DocumentView;
+import myy803.gui.view.DocumentView;
 import myy803.model.Document;
 
 public class SaveCommand implements Command {

@@ -8,7 +8,7 @@ import javax.swing.JFileChooser;
 import myy803.DocumentManager;
 import myy803.commons.Setting;
 import myy803.gui.components.DocumentFileChooser;
-import myy803.gui.views.DocumentView;
+import myy803.gui.view.DocumentView;
 import myy803.model.Document;
 
 public class SaveAsCommand implements Command {

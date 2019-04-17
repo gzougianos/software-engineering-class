@@ -3,7 +3,7 @@ package myy803;
 import javax.swing.text.JTextComponent;
 
 import myy803.gui.controller.TabController;
-import myy803.gui.views.DocumentView;
+import myy803.gui.view.DocumentView;
 import myy803.model.TextCommand;
 import myy803.model.commands.AddTextCommand;
 import myy803.model.commands.Command;

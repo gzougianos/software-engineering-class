@@ -17,9 +17,9 @@ import myy803.TextCommandManager;
 import myy803.commons.Files;
 import myy803.commons.Setting;
 import myy803.gui.controller.TabController;
-import myy803.gui.controller.TabControllerImpl;
-import myy803.gui.views.TabbedPanel;
-import myy803.gui.views.TabbedView;
+import myy803.gui.controller.impl.TabControllerImpl;
+import myy803.gui.view.TabbedPanel;
+import myy803.gui.view.TabbedView;
 
 public class MainFrame extends JFrame {
 	private static final long serialVersionUID = 895370362316846430L;

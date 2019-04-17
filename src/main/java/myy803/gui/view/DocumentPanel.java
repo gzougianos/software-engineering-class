@@ -1,4 +1,4 @@
-package myy803.gui.views;
+package myy803.gui.view;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;

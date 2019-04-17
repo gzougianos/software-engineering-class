@@ -1,4 +1,4 @@
-package myy803.gui.controller;
+package myy803.gui.controller.impl;
 
 import java.awt.Dimension;
 
@@ -9,9 +9,11 @@ import myy803.CommandFactory;
 import myy803.gui.Icon;
 import myy803.gui.MainFrame;
 import myy803.gui.SwingUtils;
-import myy803.gui.views.AddDocumentView;
-import myy803.gui.views.CommandsPanel;
-import myy803.gui.views.DocumentView;
+import myy803.gui.controller.DocumentController;
+import myy803.gui.controller.TabController;
+import myy803.gui.view.AddDocumentView;
+import myy803.gui.view.CommandsPanel;
+import myy803.gui.view.DocumentView;
 import myy803.model.Document;
 import myy803.model.TextCommand;
 

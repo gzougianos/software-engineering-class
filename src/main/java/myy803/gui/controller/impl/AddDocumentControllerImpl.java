@@ -1,4 +1,4 @@
-package myy803.gui.controller;
+package myy803.gui.controller.impl;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -13,8 +13,10 @@ import myy803.CommandFactory;
 import myy803.DocumentManager;
 import myy803.RecentFileManager;
 import myy803.gui.MainFrame;
-import myy803.gui.views.AddDocumentView;
-import myy803.gui.views.RecentFilePanel;
+import myy803.gui.controller.AddDocumentController;
+import myy803.gui.controller.TabController;
+import myy803.gui.view.AddDocumentView;
+import myy803.gui.view.RecentFilePanel;
 import myy803.model.Document;
 import myy803.model.DocumentType;
 
