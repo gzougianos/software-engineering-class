@@ -62,6 +62,10 @@ public enum DocumentManager {
 		return clone;
 	}
 
+	public Document createDocument() {
+		return createDocument(DocumentType.EMPTY);
+	}
+
 	public void saveDocument(Document doc) throws IOException {
 		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(doc.getPath()))) {
 			oos.writeObject(doc);
