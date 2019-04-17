@@ -18,9 +18,11 @@ import myy803.model.TextCommand;
 public class DocumentControllerImpl implements DocumentController {
 	private DocumentView view;
 	private AddDocumentView addDocView;
+	private TabController tabController;
 
 	public DocumentControllerImpl() {
 		addDocView = MainFrame.getInstance().getTabView().getAddDocumentView();
+		tabController = MainFrame.getInstance().getTabView().getController();
 	}
 
 	@Override
@@ -30,7 +32,7 @@ public class DocumentControllerImpl implements DocumentController {
 
 	@Override
 	public void initialize() {
-
+		changeDocSavedStateAndUpdateGUI(true);
 	}
 
 	@Override
@@ -58,7 +60,7 @@ public class DocumentControllerImpl implements DocumentController {
 	private void changeDocSavedStateAndUpdateGUI(boolean saved) {
 		view.getDocument().setSaved(saved);
 		view.getSaveButton().setEnabled(!view.getDocument().isSaved());
-		addDocView.getDocumentTypeLabels().forEach(l -> l.repaint());
+		tabController.repaintTabComponents();
 	}
 
 	@Override

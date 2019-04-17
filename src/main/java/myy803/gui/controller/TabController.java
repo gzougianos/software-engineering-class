@@ -10,4 +10,6 @@ public interface TabController extends Controller<TabbedView> {
 	void closeDocumentTab(Document doc);
 
 	void openDocumentTab(Document doc);
+
+	void repaintTabComponents();
 }

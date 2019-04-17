@@ -1,8 +1,11 @@
 package myy803.gui.views;
 
+import java.util.List;
+
 import javax.swing.JComponent;
 import javax.swing.JTabbedPane;
 
+import myy803.gui.ExternalSwingUtils;
 import myy803.gui.MainFrame;
 import myy803.gui.components.CloseTabComponent;
 import myy803.gui.controller.TabController;
@@ -44,6 +47,11 @@ public class TabbedPanel extends JTabbedPane implements TabbedView {
 	@Override
 	public TabbedPanel get() {
 		return this;
+	}
+
+	@Override
+	public List<CloseTabComponent> getCloseTabComponents() {
+		return ExternalSwingUtils.getDescendantsOfClass(CloseTabComponent.class, this);
 	}
 
 }

@@ -89,4 +89,12 @@ public class TabControllerImpl implements TabController {
 		}
 		return -1;
 	}
+
+	@Override
+	public void repaintTabComponents() {
+		view.getCloseTabComponents().forEach(l -> {
+			l.repaint();
+			l.revalidate();
+		});
+	}
 }
