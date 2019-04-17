@@ -16,9 +16,24 @@ import myy803.model.DocumentType;
 
 public class DocumentRelatedTests {
 	private static final DocumentManager DM = DocumentManager.INSTANCE;
+	private static final String ARTICLE_TEMPLATE = "\\documentclass[11pt,twocolumn,a4paper]{article}\r\n"
+			+ "\\usepackage{graphicx}\r\n" + "\r\n" + "\\begin{document}\r\n" + "\r\n"
+			+ "\\title{Article: How to Structure a LaTeX Document}\r\n" + "\\author{Author1 \\and Author2 \\and ...}\r\n"
+			+ "\\date{\\today}\r\n" + "\r\n" + "\\maketitle\r\n" + "\r\n" + "\\section{Section Title 1}\r\n" + "\r\n"
+			+ "\\section{Section Title 2}\r\n" + "\r\n" + "\\section{Section Title.....}\r\n" + "\r\n"
+			+ "\\section{Conclusion}\r\n" + "\r\n" + "\\section*{References}\r\n" + "\r\n" + "\\end{document}";
 
 	@Test
-	public void isDocumentEqualsAfterSaveLoad() throws IOException, ClassNotFoundException {
+	public void createDocument() {
+		Document doc = new Document(1888, "", 1, ARTICLE_TEMPLATE, DocumentType.ARTICLE, "test.lat");
+		Document doc2 = DM.createDocument(DocumentType.ARTICLE);
+		doc2.setPath(new File("test.lat"));
+		doc2.setLastModifiedDate(1888);
+		assertEquals(doc, doc2);
+	}
+
+	@Test
+	public void saveLoadDocument() throws IOException, ClassNotFoundException {
 		File path = new File("testdocument.lat");
 		Document doc = DM.createDocument(DocumentType.BOOK);
 		doc.setPath(path);
