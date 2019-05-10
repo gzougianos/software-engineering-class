@@ -1,4 +1,0 @@
-\usepackage{comment}
-\begin{comment}
-Emtpy document
-\end{comment}
