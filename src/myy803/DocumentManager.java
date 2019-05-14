@@ -73,6 +73,8 @@ public enum DocumentManager {
 	}
 
 	public Document loadDocument(File path) throws ClassNotFoundException, IOException {
+		if (path == null)
+			return null;
 		if (!path.exists())
 			return null;
 		try (ObjectInputStream oos = new ObjectInputStream(new FileInputStream(path))) {

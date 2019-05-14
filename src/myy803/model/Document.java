@@ -5,6 +5,10 @@ import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import myy803.model.version.NoPreviousVersionException;
+import myy803.model.version.StableVersionStrategy;
+import myy803.model.version.VersionStrategy;
+
 public class Document implements Serializable {
 	private static final long serialVersionUID = 5357144600210787382L;
 	public static final String FILE_EXTENSION = ".lat";
@@ -16,9 +20,9 @@ public class Document implements Serializable {
 	private DocumentType documentType;
 	private File path;
 	private boolean saved;
+	private VersionStrategy versionStrategy;
 
-	public Document(long lastModifiedDate, String copyright, int versionId, String content, DocumentType documentType,
-			File path) {
+	public Document(long lastModifiedDate, String copyright, int versionId, String content, DocumentType documentType, File path) {
 		this.lastModifiedDate = lastModifiedDate;
 		this.copyright = copyright;
 		this.versionId = versionId;
@@ -26,10 +30,10 @@ public class Document implements Serializable {
 		this.documentType = documentType;
 		this.path = path;
 		this.saved = path.exists();
+		setVersionStrategy(new StableVersionStrategy());
 	}
 
-	public Document(long lastModifiedDate, String copyright, int versionId, String content, DocumentType documentType,
-			String path) {
+	public Document(long lastModifiedDate, String copyright, int versionId, String content, DocumentType documentType, String path) {
 		this(lastModifiedDate, copyright, versionId, content, documentType, new File(path));
 	}
 
@@ -156,6 +160,28 @@ public class Document implements Serializable {
 
 	public void setSaved(boolean saved) {
 		this.saved = saved;
+	}
+
+	public void goToPreviousVersion() throws NoPreviousVersionException {
+		versionStrategy.previousVersion(this);
+	}
+
+	public void keepVersion() {
+		versionStrategy.saveVersion(this);
+	}
+
+	public void setVersionStrategy(VersionStrategy versionStrategy) {
+		this.versionStrategy = versionStrategy;
+	}
+
+	public void copyPropertiesFrom(Document doc2) {
+		setContent(doc2.getContent());
+		setLastModifiedDate(doc2.getLastModifiedDate());
+		setSaved(true);
+		setVersionId(doc2.getVersionId());
+		setDocumentType(doc2.getDocumentType()); //Can this get changed?
+		setCopyright(doc2.getCopyright());
+		setAuthor(doc2.getAuthor().split(", "));
 	}
 
 	@Override
