@@ -1,4 +1,4 @@
-package gr.uoi.cs.myy803;
+package myy803;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -8,11 +8,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import org.junit.Test;
-
-import myy803.DocumentManager;
 import myy803.model.Document;
 import myy803.model.DocumentType;
+
+import org.junit.Test;
 
 public class DocumentRelatedTests {
 	private static final DocumentManager DM = DocumentManager.INSTANCE;
@@ -25,7 +24,8 @@ public class DocumentRelatedTests {
 
 	@Test
 	public void createDocument() {
-		Document doc = new Document(1888, "", 1, ARTICLE_TEMPLATE, DocumentType.ARTICLE, "test.lat");
+		Document doc = new Document(1888, "", 1, ARTICLE_TEMPLATE.replaceAll("\r\n", System.lineSeparator()),
+				DocumentType.ARTICLE, "test.lat");
 		Document doc2 = DM.createDocument(DocumentType.ARTICLE);
 		doc2.setPath(new File("test.lat"));
 		doc2.setLastModifiedDate(1888);

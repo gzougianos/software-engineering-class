@@ -1,17 +1,15 @@
-package gr.uoi.cs.myy803;
+package myy803;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import javax.swing.JTextArea;
 
-import org.junit.Test;
-
-import myy803.CommandFactory;
-import myy803.TextCommandManager;
 import myy803.model.DocumentType;
 import myy803.model.TextCommand;
+
+import org.junit.Test;
 
 public class CommandsTest {
 	private static final TextCommandManager CM = TextCommandManager.INSTANCE;

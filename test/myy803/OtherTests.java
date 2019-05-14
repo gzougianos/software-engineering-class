@@ -1,10 +1,9 @@
-package gr.uoi.cs.myy803;
+package myy803;
 
 import static org.junit.Assert.assertEquals;
+import myy803.model.DocumentType;
 
 import org.junit.Test;
-
-import myy803.model.DocumentType;
 
 public class OtherTests {
 
