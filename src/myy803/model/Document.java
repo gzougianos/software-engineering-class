@@ -2,13 +2,8 @@ package myy803.model;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import myy803.model.version.NoPreviousVersionException;
-import myy803.model.version.StableVersionStrategy;
-import myy803.model.version.VersionStrategy;
 
 public class Document implements Serializable {
 	private static final long serialVersionUID = 5357144600210787382L;
@@ -21,7 +16,6 @@ public class Document implements Serializable {
 	private DocumentType documentType;
 	private File path;
 	private boolean saved;
-	private VersionStrategy versionStrategy;
 	private long timeCreated = -1;
 
 	public Document(long lastModifiedDate, String copyright, int versionId, String content, DocumentType documentType,
@@ -33,7 +27,6 @@ public class Document implements Serializable {
 		this.documentType = documentType;
 		this.path = path;
 		this.saved = path.exists();
-		setVersionStrategy(new StableVersionStrategy());
 		timeCreated = System.currentTimeMillis();
 	}
 
@@ -170,29 +163,6 @@ public class Document implements Serializable {
 	@Override
 	public int hashCode() {
 		return (int) timeCreated;
-	}
-
-	public void previousVersion() throws NoPreviousVersionException {
-		versionStrategy.previousVersion(this);
-	}
-
-	public void commitVersion() {
-		versionStrategy.saveVersion(this);
-	}
-
-	public List<Document> getPreviousVersions() {
-		return this.versionStrategy.getPreviousVersions(this);
-	}
-
-	public void setVersionStrategy(VersionStrategy versionStrategy) {
-		if (!isVersioningEnabled() || !this.versionStrategy.getClass().equals(versionStrategy.getClass())) {
-			this.versionStrategy = versionStrategy;
-			this.versionStrategy.cleanHistory(this);
-		}
-	}
-
-	public boolean isVersioningEnabled() {
-		return this.versionStrategy != null;
 	}
 
 	public void copyPropertiesFrom(Document doc2) {

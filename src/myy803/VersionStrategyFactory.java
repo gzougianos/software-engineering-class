@@ -6,7 +6,11 @@ import myy803.model.version.VersionStrategyType;
 import myy803.model.version.VolatileVersionStrategy;
 
 public class VersionStrategyFactory {
-	public static VersionStrategy createStrategy(VersionStrategyType type) {
+	private VersionStrategyFactory() {
+
+	}
+
+	static VersionStrategy createStrategy(VersionStrategyType type) {
 		switch (type) {
 			case STABLE:
 				return new StableVersionStrategy();

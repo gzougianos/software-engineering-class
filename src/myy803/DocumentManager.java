@@ -15,6 +15,7 @@ import java.util.Scanner;
 import myy803.commons.Files;
 import myy803.model.Document;
 import myy803.model.DocumentType;
+import myy803.model.version.VersionStrategyType;
 
 public enum DocumentManager {
 	INSTANCE;
@@ -59,6 +60,8 @@ public enum DocumentManager {
 		Document protype = prototypes.get(documentType);
 		Document clone = protype.clone();
 		clone.setPath(path);
+		//Default strategy
+		VersionsManager.INSTANCE.setStrategy(clone, VersionStrategyType.VOLATILE);
 		return clone;
 	}
 

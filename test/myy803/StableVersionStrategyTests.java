@@ -8,40 +8,46 @@ import org.junit.Test;
 import myy803.model.Document;
 import myy803.model.DocumentType;
 import myy803.model.version.NoPreviousVersionException;
+import myy803.model.version.VersionStrategyType;
 
 public class StableVersionStrategyTests {
+	private VersionsManager versionsManager = VersionsManager.INSTANCE;
+
 	@Test(expected = NoPreviousVersionException.class)
 	public void neverKeptAVersion() throws NoPreviousVersionException {
 		Document doc = DocumentManager.INSTANCE.createDocument(DocumentType.ARTICLE);
-		doc.previousVersion();
+		versionsManager.setStrategy(doc, VersionStrategyType.STABLE);
+		VersionsManager.INSTANCE.rollToPreviousVersion(doc);
 	}
 
 	@Test
-	public void keepOne() throws NoPreviousVersionException {
+	public void main() throws NoPreviousVersionException {
 		Document doc = DocumentManager.INSTANCE.createDocument(DocumentType.ARTICLE);
+		versionsManager.setStrategy(doc, VersionStrategyType.STABLE);
 		doc.setContent(doc.getContent() + "something");
 
 		Document before1Version = doc.clone();
-		doc.commitVersion();
+
+		versionsManager.commitVersion(doc);
 		doc.setContent(doc.getContent() + "else");//ends in somethingelse
-		doc.previousVersion();
+		versionsManager.rollToPreviousVersion(doc);
 
 		assertEquals(before1Version, doc);
 		assertEquals(doc.getVersionId(), 1);
 
 		doc.setContent(doc.getContent() + "blabla");//Version 1
 		Document before2Versions = doc.clone();
-		doc.commitVersion();
+		versionsManager.commitVersion(doc);
 		assertEquals(doc.getVersionId(), 2);
 
 		doc.setContent(doc.getContent() + "blablabla"); //Version 2
-		doc.commitVersion();
+		versionsManager.commitVersion(doc);
 		assertEquals(doc.getVersionId(), 3);
 
 		doc.setContent(doc.getContent() + " lalala");
 
-		doc.previousVersion();
-		doc.previousVersion();
+		versionsManager.rollToPreviousVersion(doc);
+		versionsManager.rollToPreviousVersion(doc);
 
 		assertEquals(doc, before2Versions);
 	}
@@ -49,25 +55,27 @@ public class StableVersionStrategyTests {
 	@Test(expected = NoPreviousVersionException.class)
 	public void keepTwoAndGoBackThree() throws NoPreviousVersionException {
 		Document doc = DocumentManager.INSTANCE.createDocument(DocumentType.ARTICLE);
+		versionsManager.setStrategy(doc, VersionStrategyType.STABLE);
 		doc.setContent(doc.getContent() + "something");
-		doc.commitVersion();
+		versionsManager.commitVersion(doc);
 
 		doc.setContent(doc.getContent() + "something");
-		doc.commitVersion();
+		versionsManager.commitVersion(doc);
 
-		doc.previousVersion();
-		doc.previousVersion();
-		doc.previousVersion();
+		versionsManager.rollToPreviousVersion(doc);
+		versionsManager.rollToPreviousVersion(doc);
+		versionsManager.rollToPreviousVersion(doc);
 	}
 
 	@Test
 	public void previousVersions() {
 		Document doc = DocumentManager.INSTANCE.createDocument(DocumentType.ARTICLE);
+		versionsManager.setStrategy(doc, VersionStrategyType.STABLE);
 		doc.setContent(doc.getContent() + "something");
 
-		assertTrue(doc.getPreviousVersions().isEmpty());
+		assertTrue(versionsManager.getPreviousVersions(doc).isEmpty());
 
-		doc.commitVersion();
-		assertTrue(doc.getPreviousVersions().size() == 1);
+		versionsManager.commitVersion(doc);
+		assertTrue(versionsManager.getPreviousVersions(doc).size() == 1);
 	}
 }

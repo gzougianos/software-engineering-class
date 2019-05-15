@@ -22,7 +22,7 @@ public class StableVersionStrategy implements VersionStrategy {
 	}
 
 	@Override
-	public void previousVersion(Document document) throws NoPreviousVersionException {
+	public void rollbackToPreviousVersion(Document document) throws NoPreviousVersionException {
 		if (document.getVersionId() == 1) {
 			throw new NoPreviousVersionException("Document " + document.getName() + " has no previous versions.");
 		}
@@ -100,11 +100,4 @@ public class StableVersionStrategy implements VersionStrategy {
 		return documentFolder;
 	}
 
-	@Override
-	public void cleanHistory(Document document) {
-		File[] versionFiles = getDocumentVersionsFolder(document).listFiles(f -> f.isFile());
-		Arrays.asList(versionFiles).forEach(f -> {
-			f.delete();
-		});
-	}
 }
