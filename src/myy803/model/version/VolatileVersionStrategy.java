@@ -36,4 +36,9 @@ public class VolatileVersionStrategy implements VersionStrategy {
 		document.setVersionId(document.getVersionId() + 1);
 	}
 
+	@Override
+	public VersionStrategyType type() {
+		return VersionStrategyType.VOLATILE;
+	}
+
 }

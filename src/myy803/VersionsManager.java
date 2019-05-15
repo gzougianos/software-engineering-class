@@ -24,6 +24,12 @@ public enum VersionsManager {
 		docStrats.put(doc, vs);
 	}
 
+	public VersionStrategyType getStrategy(Document doc) {
+		if (!docStrats.containsKey(doc))
+			return VersionStrategyType.NONE;
+		return docStrats.get(doc).type();
+	}
+
 	public void disableStrategy(Document doc) {
 		this.setStrategy(doc, null);
 	}
@@ -45,4 +51,5 @@ public enum VersionsManager {
 			return;
 		docStrats.get(doc).saveVersion(doc);
 	}
+
 }

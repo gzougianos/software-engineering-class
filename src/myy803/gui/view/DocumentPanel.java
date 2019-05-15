@@ -1,14 +1,18 @@
 package myy803.gui.view;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
@@ -29,6 +33,7 @@ import myy803.gui.SwingUtils;
 import myy803.gui.controller.DocumentController;
 import myy803.model.Document;
 import myy803.model.DocumentType;
+import myy803.model.version.VersionStrategyType;
 
 public class DocumentPanel extends JPanel implements DocumentListener, DocumentView {
 	private static final long serialVersionUID = -1467388562407975227L;
@@ -44,7 +49,8 @@ public class DocumentPanel extends JPanel implements DocumentListener, DocumentV
 	private DocumentTextPanePanel documentTextPanePanel;
 	private WebScrollPane scrollPane;
 	private JSlider fontSlider;
-	private JButton changeToolbarLocationButton, saveButton, saveAsButton, commandsButton;
+	private JButton changeToolbarLocationButton, saveButton, saveAsButton, commandsButton, rollbackButton;
+	private JComboBox<VersionStrategyType> strategyComboBox;
 	private JButton loadButton;
 	private JTextField copyrightField;
 	private JLabel authorLabel, lastModifiedDateField;
@@ -63,6 +69,9 @@ public class DocumentPanel extends JPanel implements DocumentListener, DocumentV
 		toolbar.add(saveAsButton);
 		toolbar.addSeparator();
 		toolbar.add(commandsButton);
+		toolbar.addSeparator();
+		toolbar.add(rollbackButton);
+		toolbar.add(strategyComboBox);
 		toolbar.addToEnd(fontSlider);
 		toolbar.addSeparatorToEnd();
 		toolbar.addToEnd(changeToolbarLocationButton);
@@ -176,6 +185,34 @@ public class DocumentPanel extends JPanel implements DocumentListener, DocumentV
 		commandsButton.setEnabled(docTypeAllowsCommands());
 		if (commandsButton.isEnabled())
 			commandsButton.setToolTipText(SwingUtils.toHTML("Add command..."));
+
+		strategyComboBox = new JComboBox<>();
+		strategyComboBox.setToolTipText(SwingUtils.toHTML("Version strategy"));
+		for (VersionStrategyType type : VersionStrategyType.values())
+			strategyComboBox.addItem(type);
+		strategyComboBox.setRenderer(new DefaultListCellRenderer() {
+			private static final long serialVersionUID = 9095403940815330085L;
+
+			@Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+					boolean cellHasFocus) {
+				JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+				if (value instanceof VersionStrategyType) {
+					VersionStrategyType tt = (VersionStrategyType) value;
+					label.setText(tt.getName());
+				}
+				label.setIcon(Icon.VERSION.toImageIcon(ICON_DIMENSION));
+				label.setOpaque(isSelected);
+				return label;
+			}
+		});
+		strategyComboBox.addActionListener(
+				e -> controller.onVersionStrategyChange((VersionStrategyType) strategyComboBox.getSelectedItem()));
+
+		rollbackButton = new JButton(Icon.BACK.toImageIcon(ICON_DIMENSION));
+		rollbackButton.setFont(MainFrame.MAIN_FONT);
+		rollbackButton.addActionListener(e -> controller.rollToPreviousVersion());
+
 	}
 
 	private boolean docTypeAllowsCommands() {
@@ -248,6 +285,24 @@ public class DocumentPanel extends JPanel implements DocumentListener, DocumentV
 	@Override
 	public JTextPane getTextPane() {
 		return documentTextPanePanel.getTextPane();
+	}
+
+	@Override
+	public void restore() {
+		authorLabel.setText(document.getAuthor());
+		copyrightField.setText(document.getCopyright());
+		lastModifiedDateField.setText("Last Modified Date: " + SwingUtils.formatDate(document.getLastModifiedDate()));
+		getTextPane().setText(document.getContent());
+	}
+
+	@Override
+	public JComboBox<VersionStrategyType> getVersionStrategyTypeComboBox() {
+		return strategyComboBox;
+	}
+
+	@Override
+	public JButton getRollBackButton() {
+		return rollbackButton;
 	}
 
 }

@@ -12,4 +12,6 @@ public interface VersionStrategy extends Serializable {
 
 	public void saveVersion(Document document);
 
+	public VersionStrategyType type();
+
 }

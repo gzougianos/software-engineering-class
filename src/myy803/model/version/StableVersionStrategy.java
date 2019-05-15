@@ -100,4 +100,9 @@ public class StableVersionStrategy implements VersionStrategy {
 		return documentFolder;
 	}
 
+	@Override
+	public VersionStrategyType type() {
+		return VersionStrategyType.STABLE;
+	}
+
 }

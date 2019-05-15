@@ -13,7 +13,9 @@ public enum Icon {
 	SAVE("save.png"),
 	SAVE_AS("save_as.png"),
 	FAVICON("favicon.png"),
+	VERSION("version.png"),
 	TICK("tick.png"),
+	BACK("back.png"),
 	SPLASH_SCREEN("splash_screen.png");
 	//@formatter:on
 	private static final String PACKAGE = "/myy803/resources/icons/";

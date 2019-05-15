@@ -1,5 +1,6 @@
 package myy803;
 
+import myy803.model.version.NoneVersionStrategy;
 import myy803.model.version.StableVersionStrategy;
 import myy803.model.version.VersionStrategy;
 import myy803.model.version.VersionStrategyType;
@@ -17,7 +18,7 @@ public class VersionStrategyFactory {
 			case VOLATILE:
 				return new VolatileVersionStrategy();
 			default:
-				return null;
+				return new NoneVersionStrategy();
 
 		}
 	}
