@@ -1,21 +1,30 @@
 package myy803;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import myy803.commons.Files;
 import myy803.model.Document;
 
 public enum RecentFileManager {
 	INSTANCE;
-	private ArrayList<String> recentFiles = new ArrayList<>();
+	private List<String> recentFiles = new ArrayList<>();
 
 	private RecentFileManager() {
 		load();
+		cleanNonExisted();
+	}
+
+	private void cleanNonExisted() {
+		List<String> nonExisted = recentFiles.stream().filter(s -> !new File(s).exists()).collect(Collectors.toList());
+		recentFiles.removeAll(nonExisted);
 	}
 
 	@SuppressWarnings("unchecked")
