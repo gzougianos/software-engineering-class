@@ -23,24 +23,5 @@ public class Files {
 		}
 		if (!VERSIONS_FOLDER.exists())
 			VERSIONS_FOLDER.mkdirs();
-		else {
-			deleteFilesInFolder(VERSIONS_FOLDER);
-			VERSIONS_FOLDER.mkdirs();
-		}
-
-	}
-
-	private static void deleteFilesInFolder(File folder) {
-		File[] files = folder.listFiles();
-		if (files != null) { //some JVMs return null for empty dirs
-			for (File f : files) {
-				if (f.isDirectory()) {
-					deleteFilesInFolder(f);
-				} else {
-					f.delete();
-				}
-			}
-		}
-		folder.delete();
 	}
 }

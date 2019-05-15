@@ -10,6 +10,8 @@ public interface VersionStrategy extends Serializable {
 
 	public List<Document> getPreviousVersions(Document document);
 
-	public void saveVersion(Document doc);
+	public void saveVersion(Document document);
+
+	public void cleanHistory(Document document);
 
 }

@@ -2,6 +2,7 @@ package myy803.model;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,8 +22,10 @@ public class Document implements Serializable {
 	private File path;
 	private boolean saved;
 	private VersionStrategy versionStrategy;
+	private long timeCreated = -1;
 
-	public Document(long lastModifiedDate, String copyright, int versionId, String content, DocumentType documentType, File path) {
+	public Document(long lastModifiedDate, String copyright, int versionId, String content, DocumentType documentType,
+			File path) {
 		this.lastModifiedDate = lastModifiedDate;
 		this.copyright = copyright;
 		this.versionId = versionId;
@@ -31,9 +34,11 @@ public class Document implements Serializable {
 		this.path = path;
 		this.saved = path.exists();
 		setVersionStrategy(new StableVersionStrategy());
+		timeCreated = System.currentTimeMillis();
 	}
 
-	public Document(long lastModifiedDate, String copyright, int versionId, String content, DocumentType documentType, String path) {
+	public Document(long lastModifiedDate, String copyright, int versionId, String content, DocumentType documentType,
+			String path) {
 		this(lastModifiedDate, copyright, versionId, content, documentType, new File(path));
 	}
 
@@ -162,16 +167,32 @@ public class Document implements Serializable {
 		this.saved = saved;
 	}
 
-	public void goToPreviousVersion() throws NoPreviousVersionException {
+	@Override
+	public int hashCode() {
+		return (int) timeCreated;
+	}
+
+	public void previousVersion() throws NoPreviousVersionException {
 		versionStrategy.previousVersion(this);
 	}
 
-	public void keepVersion() {
+	public void commitVersion() {
 		versionStrategy.saveVersion(this);
 	}
 
+	public List<Document> getPreviousVersions() {
+		return this.versionStrategy.getPreviousVersions(this);
+	}
+
 	public void setVersionStrategy(VersionStrategy versionStrategy) {
-		this.versionStrategy = versionStrategy;
+		if (!isVersioningEnabled() || !this.versionStrategy.getClass().equals(versionStrategy.getClass())) {
+			this.versionStrategy = versionStrategy;
+			this.versionStrategy.cleanHistory(this);
+		}
+	}
+
+	public boolean isVersioningEnabled() {
+		return this.versionStrategy != null;
 	}
 
 	public void copyPropertiesFrom(Document doc2) {
