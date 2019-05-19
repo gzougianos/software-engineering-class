@@ -125,6 +125,7 @@ public class DocumentControllerImpl implements DocumentController, ActionListene
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		VersionsManager.INSTANCE.commitVersion(view.getDocument());
+		view.getDocument().setContent(view.getTextPane().getText());
 		view.getRollBackButton().setEnabled(true);
 	}
 
@@ -134,6 +135,7 @@ public class DocumentControllerImpl implements DocumentController, ActionListene
 			VersionsManager.INSTANCE.rollToPreviousVersion(view.getDocument());
 			view.restore();
 			timer.stop();
+			view.getRollBackButton().setEnabled(true);
 		} catch (NoPreviousVersionException e) {
 			JOptionPane.showMessageDialog(view.get(), "There are no previous versions.");
 		}
