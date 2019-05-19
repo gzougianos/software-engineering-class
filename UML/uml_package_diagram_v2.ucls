@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.2.3" icons="true" automaticImage="PNG" always-add-relationships="true" generalizations="true" 
+  realizations="true" associations="true" dependencies="true" nesting-relationships="true" router="FAN">  
+  <package id="1" language="java" name="myy803.gui.controller.impl" project="2591_2442_2559_LatexEditor" 
+    file="/2591_2442_2559_LatexEditor/src/myy803/gui/controller/impl" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="50" width="172" x="540" y="195"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="2" language="java" name="myy803.model.commands" project="2591_2442_2559_LatexEditor" 
+    file="/2591_2442_2559_LatexEditor/src/myy803/model/commands" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="50" width="173" x="163" y="285"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="3" language="java" name="myy803" project="2591_2442_2559_LatexEditor" 
+    file="/2591_2442_2559_LatexEditor/src/myy803" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="50" width="101" x="355" y="375"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="4" language="java" name="myy803.resources" project="2591_2442_2559_LatexEditor" 
+    file="/2591_2442_2559_LatexEditor/src/myy803/resources" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="50" width="130" x="266" y="195"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="5" language="java" name="myy803.gui.view" project="2591_2442_2559_LatexEditor" 
+    file="/2591_2442_2559_LatexEditor/src/myy803/gui/view" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="50" width="117" x="540" y="465"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="6" language="java" name="myy803.model" project="2591_2442_2559_LatexEditor" 
+    file="/2591_2442_2559_LatexEditor/src/myy803/model" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="50" width="106" x="352" y="735"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="7" language="java" name="myy803.model.version" project="2591_2442_2559_LatexEditor" 
+    file="/2591_2442_2559_LatexEditor/src/myy803/model/version" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="50" width="151" x="440" y="645"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="8" language="java" name="myy803.gui" project="2591_2442_2559_LatexEditor" 
+    file="/2591_2442_2559_LatexEditor/src/myy803/gui" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="50" width="101" x="376" y="285"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="9" language="java" name="myy803.gui.controller" project="2591_2442_2559_LatexEditor" 
+    file="/2591_2442_2559_LatexEditor/src/myy803/gui/controller" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="50" width="146" x="352" y="555"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <dependency id="10">    
+    <bendpoint x="507" y="285"/>    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <dependency id="11">    
+    <bendpoint x="549" y="285"/>    
+    <bendpoint x="549" y="375"/>    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="5"/>  
+  </dependency>  
+  <dependency id="12">    
+    <bendpoint x="528" y="285"/>    
+    <bendpoint x="528" y="375"/>    
+    <bendpoint x="509" y="465"/>    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="9"/>  
+  </dependency>  
+  <dependency id="13">    
+    <bendpoint x="362" y="465"/>    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="9"/>  
+  </dependency>  
+  <dependency id="14">    
+    <bendpoint x="507" y="375"/>    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="8"/>  
+  </dependency>  
+  <dependency id="15">    
+    <bendpoint x="488" y="465"/>    
+    <bendpoint x="528" y="555"/>    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="7"/>  
+  </dependency>  
+  <dependency id="16">    
+    <bendpoint x="708" y="285"/>    
+    <bendpoint x="708" y="375"/>    
+    <bendpoint x="708" y="465"/>    
+    <bendpoint x="708" y="555"/>    
+    <bendpoint x="708" y="645"/>    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="6"/>  
+  </dependency>  
+  <dependency id="17">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="8"/>  
+  </dependency>  
+  <dependency id="18">    
+    <bendpoint x="277" y="375"/>    
+    <bendpoint x="277" y="465"/>    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="9"/>  
+  </dependency>  
+  <dependency id="19">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="7"/>  
+  </dependency>  
+  <dependency id="20">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="5"/>  
+  </dependency>  
+  <dependency id="21">    
+    <bendpoint x="621" y="555"/>    
+    <bendpoint x="621" y="645"/>    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="6"/>  
+  </dependency>  
+  <dependency id="22">    
+    <bendpoint x="486" y="375"/>    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="5"/>  
+  </dependency>  
+  <dependency id="23">    
+    <bendpoint x="256" y="375"/>    
+    <bendpoint x="256" y="465"/>    
+    <bendpoint x="256" y="555"/>    
+    <bendpoint x="256" y="645"/>    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="6"/>  
+  </dependency>  
+  <dependency id="24">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="6"/>  
+  </dependency>  
+  <dependency id="25">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <dependency id="26">    
+    <bendpoint x="687" y="285"/>    
+    <bendpoint x="687" y="375"/>    
+    <bendpoint x="687" y="465"/>    
+    <bendpoint x="687" y="555"/>    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="7"/>  
+  </dependency>  
+  <dependency id="27">    
+    <bendpoint x="549" y="555"/>    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="7"/>  
+  </dependency>  
+  <dependency id="28">    
+    <bendpoint x="361" y="645"/>    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="6"/>  
+  </dependency>  
+  <dependency id="29">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <dependency id="30">    
+    <bendpoint x="321" y="465"/>    
+    <bendpoint x="321" y="555"/>    
+    <bendpoint x="321" y="645"/>    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="6"/>  
+  </dependency>  
+  <dependency id="31">    
+    <bendpoint x="300" y="375"/>    
+    <bendpoint x="300" y="465"/>    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="9"/>  
+  </dependency>  
+  <dependency id="32">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="9"/>  
+  </dependency>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    sort-features="false" accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
