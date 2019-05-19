@@ -81,6 +81,7 @@ public class DocumentControllerImpl implements DocumentController, ActionListene
 	public void textPaneChanged(DocumentEvent event) {
 		changeDocSavedStateAndUpdateGUI(false);
 		updateAuthor(event);
+		view.getRollBackButton().setEnabled(false);
 		if (timer.isRunning())
 			timer.restart();
 		else
@@ -124,6 +125,7 @@ public class DocumentControllerImpl implements DocumentController, ActionListene
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		VersionsManager.INSTANCE.commitVersion(view.getDocument());
+		view.getRollBackButton().setEnabled(true);
 	}
 
 	@Override
