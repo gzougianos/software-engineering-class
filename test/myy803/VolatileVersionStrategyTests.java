@@ -3,6 +3,7 @@ package myy803;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import myy803.model.Document;
@@ -43,5 +44,10 @@ public class VolatileVersionStrategyTests {
 
 		versionsManager.commitVersion(doc);
 		assertTrue(versionsManager.getPreviousVersions(doc).size() == 1);
+	}
+
+	@Before
+	public void sleep() throws InterruptedException {
+		Thread.sleep(15); //Need to sleep because some times documents are created with the same hascode
 	}
 }
