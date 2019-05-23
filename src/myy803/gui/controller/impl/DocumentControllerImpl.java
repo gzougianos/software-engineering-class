@@ -126,7 +126,8 @@ public class DocumentControllerImpl implements DocumentController, ActionListene
 	public void actionPerformed(ActionEvent e) {
 		VersionsManager.INSTANCE.commitVersion(view.getDocument());
 		view.getDocument().setContent(view.getTextPane().getText());
-		view.getRollBackButton().setEnabled(true);
+		VersionStrategyType vs = VersionsManager.INSTANCE.getStrategy(view.getDocument());
+		view.getRollBackButton().setEnabled(vs != VersionStrategyType.NONE);
 	}
 
 	@Override
